@@ -1,0 +1,137 @@
+services:
+  postgres-order:
+    image: postgres:15
+    container_name: postgres-order
+    environment:
+      POSTGRES_DB: orderdb
+      POSTGRES_USER: orderuser
+      POSTGRES_PASSWORD: orderpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata_order:/var/lib/postgresql/data
+    networks:
+      - springnet
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "orderuser", "-d", "orderdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres-customer:
+    image: postgres:15
+    container_name: postgres-customer
+    environment:
+      POSTGRES_DB: customerdb
+      POSTGRES_USER: customeruser
+      POSTGRES_PASSWORD: customerpass
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata_customer:/var/lib/postgresql/data
+    networks:
+      - springnet
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "customeruser", "-d" , "customerdb" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  postgres-restaurant:
+    image: postgres:15
+    container_name: postgres-restaurant
+    environment:
+      POSTGRES_DB: restaurantdb
+      POSTGRES_USER: restaurantuser
+      POSTGRES_PASSWORD: restaurantpass
+    ports:
+      - "5434:5432"
+    volumes:
+      - pgdata_restaurant:/var/lib/postgresql/data
+    networks:
+      - springnet
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "restaurantuser", "-d" , "restaurantdb" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: orderSystemUser
+      RABBITMQ_DEFAULT_PASS: orderSystem2925
+    networks:
+      - springnet
+
+
+  order-management:
+    build:
+      context: ./OrderManagement
+      dockerfile: Dockerfile
+    container_name: order-management
+    depends_on:
+      postgres-order:
+        condition: service_healthy
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-order:5432/orderdb
+      SPRING_DATASOURCE_USERNAME: orderuser
+      SPRING_DATASOURCE_PASSWORD: orderpass
+      RABBIT_INIT_ENABLED: "true"
+    ports:
+      - "8080:8080"
+    networks:
+      - springnet
+
+  customer-service:
+    build:
+      context: ./customerservice
+      dockerfile: Dockerfile
+    container_name: customer-service
+    depends_on:
+      postgres-customer:
+        condition: service_healthy
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-customer:5432/customerdb
+      SPRING_DATASOURCE_USERNAME: customeruser
+      SPRING_DATASOURCE_PASSWORD: customerpass
+    ports:
+      - "8081:8081"
+    networks:
+      - springnet
+
+  restaurant-service:
+    build:
+      context: ./RestaurantService
+      dockerfile: Dockerfile
+    container_name: restaurant-service
+    depends_on:
+      postgres-restaurant:
+        condition: service_healthy
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-restaurant:5432/restaurantdb
+      SPRING_DATASOURCE_USERNAME: restaurantuser
+      SPRING_DATASOURCE_PASSWORD: restaurantpass
+    ports:
+      - "8082:8082"
+    networks:
+      - springnet
+
+volumes:
+  pgdata_order:
+  pgdata_customer:
+  pgdata_restaurant:
+  rabbitmq_data:
+
+networks:
+  springnet:
+    driver: bridge
