@@ -2,7 +2,6 @@ package com.microservico.customerservice.service;
 
 import com.microservico.customerservice.dto.request.PedidoDtoRequest;
 import com.microservico.customerservice.dto.response.PedidoDtoResponse;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -10,11 +9,13 @@ import org.springframework.web.client.*;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class PedidoClient {
 
-    @Value("${order.management.url}")
     private final String orderManagementUrl;
+
+    public PedidoClient(@Value("${order.management.url}") String orderManagementUrl) {
+        this.orderManagementUrl = orderManagementUrl;
+    }
 
     public PedidoDtoResponse criarPedido(PedidoDtoRequest request) {
 
