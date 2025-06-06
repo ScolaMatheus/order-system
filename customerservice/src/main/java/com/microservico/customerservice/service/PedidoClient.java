@@ -14,7 +14,7 @@ import org.springframework.web.client.*;
 public class PedidoClient {
 
     @Value("${order.management.url}")
-    private String orderManagementUrl;
+    private final String orderManagementUrl;
 
     public PedidoDtoResponse criarPedido(PedidoDtoRequest request) {
 

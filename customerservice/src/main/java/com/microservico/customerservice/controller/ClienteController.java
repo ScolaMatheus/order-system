@@ -27,7 +27,7 @@ public class ClienteController {
     public ResponseEntity<ClienteDtoResponse> cadastrarCliente(@Valid @RequestBody ClienteDtoRequest dto) {
         ClienteDtoResponse clienteDtoResponse = clienteService.cadastrar(dto);
 
-        URI uri = URI.create("/clientes/" + clienteDtoResponse.getId());
+        URI uri = URI.create("/clientes/" + clienteDtoResponse.id());
         return ResponseEntity.created(uri).body(clienteDtoResponse);
     }
 
@@ -35,7 +35,7 @@ public class ClienteController {
     public ResponseEntity<PedidoDtoResponse> fazerPedido(@RequestBody PedidoDtoRequest request) {
         PedidoDtoResponse pedidoDtoResponse = pedidoClient.criarPedido(request);
 
-        URI uri = URI.create("/api/pedidos/" + pedidoDtoResponse.getId());
+        URI uri = URI.create("/api/pedidos/" + pedidoDtoResponse.id());
         return ResponseEntity.created(uri).body(pedidoDtoResponse);
     }
 

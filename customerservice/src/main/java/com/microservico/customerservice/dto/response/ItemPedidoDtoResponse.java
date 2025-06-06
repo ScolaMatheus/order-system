@@ -1,16 +1,4 @@
 package com.microservico.customerservice.dto.response;
 
-import lombok.*;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@EqualsAndHashCode
-@ToString
-public class ItemPedidoDtoResponse {
-    private Long id;
-    private Long produtoId;
-    private String nomeProduto;
-    private Double precoUnitario;
-    private int quantidade;
+public record ItemPedidoDtoResponse(Long id, Long produtoId, String nomeProduto, Double precoUnitario, int quantidade) {
 }

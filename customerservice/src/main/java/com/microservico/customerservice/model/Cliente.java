@@ -1,6 +1,5 @@
 package com.microservico.customerservice.model;
 
-import com.microservico.customerservice.dto.request.ClienteDtoRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
@@ -32,11 +31,4 @@ public class Cliente {
     @Column(unique = true, nullable = false)
     @Email
     private String email;
-
-    public Cliente(ClienteDtoRequest clienteDtoRequest) {
-        this.nome = clienteDtoRequest.getNome();
-        this.cpf = clienteDtoRequest.getCpf();
-        this.telefone = clienteDtoRequest.getTelefone();
-        this.email = clienteDtoRequest.getEmail();
-    }
 }
