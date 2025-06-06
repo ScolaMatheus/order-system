@@ -30,13 +30,14 @@ public class PedidoEventConsumer {
             log.info("Pedido {} aceito pelo restaurante {}", event.getPedidoId(), event.getRestauranteId());
         } else {
             log.warn("Pedido {} CANCELADO - restaurante ou item inválido/inativado", event.getPedidoId());
-//            pedidoEventPublisher.publicarPedidoCancelado(new PedidoCanceladoEvent(
-//                    event.getPedidoId(),
-//                    event.getRestauranteId(),
-//                    event.getClienteId(),
-//                    "Pedido cancelado devido a Restaurante ou item inválido/inativado",
-//                    LocalDateTime.now()
-//            ));
+            pedidoEventPublisher.publicarPedidoCancelado(new PedidoCanceladoEvent(
+                    event.getPedidoId(),
+                    event.getRestauranteId(),
+                    event.getClienteId(),
+                    "Pedido cancelado devido a Restaurante ou item inválido/inativado",
+                    LocalDateTime.now(),
+                    "restaurant-service"
+            ));
         }
     }
 }

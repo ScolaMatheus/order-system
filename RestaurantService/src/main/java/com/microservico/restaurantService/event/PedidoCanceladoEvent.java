@@ -16,5 +16,5 @@ public class PedidoCanceladoEvent {
     private Long clienteId;
     private String motivoCancelamento;
     private LocalDateTime dataHoraCancelamento;
-
+    private String origemCancelamento;
 }
