@@ -14,6 +14,8 @@ public class RabbitMQConfig {
     public static final String PEDIDO_EXCHANGE = "pedido.exchange";
     public static final String PEDIDO_QUEUE = "pedido.criado.queue";
     public static final String PEDIDO_ROUTING_KEY = "pedido.criado";
+    public static final String PEDIDO_CANCELADO_QUEUE = "pedido.cancelado.queue";
+    public static final String PEDIDO_CANCELADO_ROUTING_KEY = "pedido.cancelado";
 
     @Bean
     public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
@@ -57,12 +59,25 @@ public class RabbitMQConfig {
         return QueueBuilder.durable(PEDIDO_QUEUE).build();
     }
 
+    // Fila que vai receber os eventos dos pedidos cancelados
+    @Bean
+    public Queue pedidoCanceladoQueue() {
+        return QueueBuilder.durable(PEDIDO_CANCELADO_QUEUE).build();
+    }
+
     // Ligação entre a exchange e a fila com uma routing key
     @Bean
     public Binding pedidoBinding(Queue pedidoQueue, DirectExchange pedidoExchange) {
         return BindingBuilder.bind(pedidoQueue)
                 .to(pedidoExchange)
                 .with(PEDIDO_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding pedidoCanceladoBinding(Queue pedidoCanceladoQueue, DirectExchange pedidoExchange) {
+        return BindingBuilder.bind(pedidoCanceladoQueue)
+                .to(pedidoExchange)
+                .with(PEDIDO_CANCELADO_ROUTING_KEY);
     }
 
 }

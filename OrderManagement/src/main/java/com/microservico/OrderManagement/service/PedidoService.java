@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -48,6 +49,16 @@ public class PedidoService {
         return pedidoRepository.findById(idPedido)
                 .map(pedidoMapper::toDto)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado com id: " + idPedido));
+    }
+
+    public void atualizarPedido(Long idPedido, LocalDateTime dataHoraCancelamento) {
+        Pedido pedido = pedidoRepository.findById(idPedido).orElseThrow(
+                () -> new RecursoNaoEncontradoException("Pedido não encontrado com esse id: " + idPedido));
+
+        pedido.setStatusPedido(StatusPedido.CANCELADO);
+        pedido.setDataAtualizacao(dataHoraCancelamento);
+
+        pedidoRepository.save(pedido);
     }
 
     public void excluirPedido(long idPedido) {
