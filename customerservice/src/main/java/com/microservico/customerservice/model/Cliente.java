@@ -1,0 +1,42 @@
+package com.microservico.customerservice.model;
+
+import com.microservico.customerservice.dto.request.ClienteDtoRequest;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Pattern;
+import lombok.*;
+
+@Entity
+@Table(name = "tb_cliente")
+@Getter
+@Setter
+@AllArgsConstructor
+@EqualsAndHashCode
+@NoArgsConstructor
+@ToString
+public class Cliente {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private String nome;
+
+    @Pattern(regexp = "\\d{11}", message = "CPF deve conter 11 dígitos numéricos")
+    @Column(unique = true, nullable = false)
+    private String cpf;
+
+    @Column(nullable = false)
+    private String telefone;
+
+    @Column(unique = true, nullable = false)
+    @Email
+    private String email;
+
+    public Cliente(ClienteDtoRequest clienteDtoRequest) {
+        this.nome = clienteDtoRequest.getNome();
+        this.cpf = clienteDtoRequest.getCpf();
+        this.telefone = clienteDtoRequest.getTelefone();
+        this.email = clienteDtoRequest.getEmail();
+    }
+}
