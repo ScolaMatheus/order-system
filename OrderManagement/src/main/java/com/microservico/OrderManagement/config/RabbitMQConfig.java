@@ -8,14 +8,10 @@ import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static com.microservico.OrderManagement.util.RabbitConstants.*;
+
 @Configuration
 public class RabbitMQConfig {
-
-    public static final String PEDIDO_EXCHANGE = "pedido.exchange";
-    public static final String PEDIDO_QUEUE = "pedido.criado.queue";
-    public static final String PEDIDO_ROUTING_KEY = "pedido.criado";
-    public static final String PEDIDO_CANCELADO_QUEUE = "pedido.cancelado.queue";
-    public static final String PEDIDO_CANCELADO_ROUTING_KEY = "pedido.cancelado";
 
     @Bean
     public AmqpAdmin amqpAdmin(ConnectionFactory connectionFactory) {
@@ -56,28 +52,67 @@ public class RabbitMQConfig {
     // Fila que vai receber os eventos do pedido criado
     @Bean
     public Queue pedidoQueue() {
-        return QueueBuilder.durable(PEDIDO_QUEUE).build();
+        return definirFila(PEDIDO_QUEUE);
     }
 
     // Fila que vai receber os eventos dos pedidos cancelados
     @Bean
     public Queue pedidoCanceladoQueue() {
-        return QueueBuilder.durable(PEDIDO_CANCELADO_QUEUE).build();
+        return definirFila(PEDIDO_CANCELADO_QUEUE);
+    }
+
+    // Fila que vai receber os eventos dos pedidos em preparação
+    @Bean
+    public Queue pedidoPreparandoQueue() {
+        return definirFila(PEDIDO_PREPARANDO_QUEUE);
+    }
+
+    // Fila que vai receber os eventos dos pedidos em rota de entrega
+    @Bean
+    public Queue pedidoEmRotaQueue() {
+        return definirFila(PEDIDO_EM_ROTA_QUEUE);
+    }
+
+    // Fila que vai receber os eventos dos pedidos entregues
+    @Bean
+    public Queue pedidoEntrege() {
+        return definirFila(PEDIDO_ENTREGE_QUEUE);
     }
 
     // Ligação entre a exchange e a fila com uma routing key
     @Bean
     public Binding pedidoBinding(Queue pedidoQueue, DirectExchange pedidoExchange) {
-        return BindingBuilder.bind(pedidoQueue)
-                .to(pedidoExchange)
-                .with(PEDIDO_ROUTING_KEY);
+        return definirBindinds(pedidoQueue, pedidoExchange, PEDIDO_ROUTING_KEY);
     }
 
     @Bean
     public Binding pedidoCanceladoBinding(Queue pedidoCanceladoQueue, DirectExchange pedidoExchange) {
-        return BindingBuilder.bind(pedidoCanceladoQueue)
-                .to(pedidoExchange)
-                .with(PEDIDO_CANCELADO_ROUTING_KEY);
+        return definirBindinds(pedidoCanceladoQueue, pedidoExchange, PEDIDO_CANCELADO_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding pedidoPreparandoBinding(Queue pedidoPreparandoQueue, DirectExchange pedidoExchange) {
+        return definirBindinds(pedidoPreparandoQueue, pedidoExchange, PEDIDO_PREPARANDO_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding pedidoEmRotaBinding(Queue pedidoEmRotaQueue, DirectExchange pedidoExchange) {
+        return definirBindinds(pedidoEmRotaQueue, pedidoExchange, PEDIDO_EM_ROTA_ROUTING_KEY);
+    }
+
+    @Bean
+    public Binding pedidoEntregeBinding(Queue pedidoEntregeQueue, DirectExchange pedidoExchange) {
+        return definirBindinds(pedidoEntregeQueue, pedidoExchange, PEDIDO_ENTREGE_ROUTING_KEY);
+    }
+
+    private Queue definirFila(String nameQueue) {
+        return QueueBuilder.durable(nameQueue).build();
+    }
+
+    private Binding definirBindinds(Queue queue, DirectExchange directExchange, String routingKey) {
+        return BindingBuilder.bind(queue)
+                .to(directExchange)
+                .with(routingKey);
     }
 
 }
