@@ -75,7 +75,7 @@ public class RabbitMQConfig {
 
     // Fila que vai receber os eventos dos pedidos entregues
     @Bean
-    public Queue pedidoEntrege() {
+    public Queue pedidoEntregeQueue() {
         return definirFila(PEDIDO_ENTREGE_QUEUE);
     }
 
