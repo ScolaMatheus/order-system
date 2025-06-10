@@ -5,7 +5,6 @@ import com.microservico.restaurantService.dto.response.ExceptionDTO;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -30,6 +29,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity<ExceptionDTO> handleProdutoNaoEcontrado(ProdutoNaoEncontradoException exception) {
         ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exceptionDTO);
+    }
+
+    @ExceptionHandler(StatusIncorretoException.class)
+    public ResponseEntity<ExceptionDTO> handleStatusIncorreto(StatusIncorretoException exception) {
+        ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDTO);
     }
 
 }

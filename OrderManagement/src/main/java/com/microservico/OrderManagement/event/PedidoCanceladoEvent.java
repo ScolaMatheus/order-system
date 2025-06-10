@@ -2,20 +2,15 @@ package com.microservico.OrderManagement.event;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PedidoCanceladoEvent {
-
-    private Long pedidoId;
-    private Long restauranteId;
-    private Long clienteId;
+@EqualsAndHashCode(callSuper = true)
+public class PedidoCanceladoEvent extends PedidoEvent{
     private String motivoCancelamento;
-    private LocalDateTime dataHoraCancelamento;
     private String origemCancelamento;
 
 }

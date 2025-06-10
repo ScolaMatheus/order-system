@@ -1,15 +1,13 @@
 package com.microservico.restaurantService.consumer;
 
-import com.microservico.restaurantService.event.PedidoCanceladoEvent;
-import com.microservico.restaurantService.event.PedidoCriadoEvent;
-import com.microservico.restaurantService.publisher.PedidoEventPublisher;
-import com.microservico.restaurantService.service.PedidoValidationService;
+import com.microservico.restaurantService.event.PedidoStatusEvent;
+import com.microservico.restaurantService.service.PedidoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
+import static com.microservico.restaurantService.util.RabbitConstants.PEDIDO_QUEUE;
 
 
 @Slf4j
@@ -17,27 +15,11 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class PedidoEventConsumer {
 
-    private final PedidoValidationService pedidoValidationService;
-    private final PedidoEventPublisher pedidoEventPublisher;
+    private final PedidoService pedidoService;
 
-    @RabbitListener(queues = "pedido.criado.queue")
-    public void consumirPedido(PedidoCriadoEvent event) {
+    @RabbitListener(queues = PEDIDO_QUEUE)
+    public void consumirPedido(PedidoStatusEvent event) {
         log.info("Pedido recebido: {}",  event);
-
-        boolean pedidoValido = pedidoValidationService.validarRestautanteEItens(event.getRestauranteId(), event.getItens());
-
-        if (pedidoValido) {
-            log.info("Pedido {} aceito pelo restaurante {}", event.getPedidoId(), event.getRestauranteId());
-        } else {
-            log.warn("Pedido {} CANCELADO - restaurante ou item inválido/inativado", event.getPedidoId());
-            pedidoEventPublisher.publicarPedidoCancelado(new PedidoCanceladoEvent(
-                    event.getPedidoId(),
-                    event.getRestauranteId(),
-                    event.getClienteId(),
-                    "Pedido cancelado devido a Restaurante ou item inválido/inativado",
-                    LocalDateTime.now(),
-                    "restaurant-service"
-            ));
-        }
+        pedidoService.consumirPedido(event);
     }
 }
