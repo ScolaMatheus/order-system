@@ -31,7 +31,7 @@ public class ClienteController {
         return ResponseEntity.created(uri).body(clienteDtoResponse);
     }
 
-    @PostMapping("/{id}/pedidos")
+    @PostMapping("/pedidos")
     public ResponseEntity<PedidoDtoResponse> fazerPedido(@RequestBody PedidoDtoRequest request) {
         PedidoDtoResponse pedidoDtoResponse = pedidoClient.criarPedido(request);
 
