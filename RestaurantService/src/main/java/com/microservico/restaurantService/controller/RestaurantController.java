@@ -2,6 +2,8 @@ package com.microservico.restaurantService.controller;
 
 import com.microservico.restaurantService.dto.request.RestaurantRequestDTO;
 import com.microservico.restaurantService.dto.response.RestaurantResponseDTO;
+import com.microservico.restaurantService.event.PedidoStatusEvent;
+import com.microservico.restaurantService.service.PedidoService;
 import com.microservico.restaurantService.service.RestaurantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ public class RestaurantController {
 
 
     private final RestaurantService restaurantService;
+    private final PedidoService pedidoService;
 
     @PostMapping
     public ResponseEntity<RestaurantResponseDTO> cadastrar(@Valid @RequestBody RestaurantRequestDTO dto) {
@@ -26,6 +29,13 @@ public class RestaurantController {
     @GetMapping
     public ResponseEntity<List<RestaurantResponseDTO>> listar() {
         return ResponseEntity.ok(restaurantService.listarTodos());
+    }
+
+    @PostMapping
+    public ResponseEntity<PedidoStatusEvent> informarPedidoPronto(@PathVariable Long idPedido) {
+        PedidoStatusEvent pedidoEvent = pedidoService.informarPedidoPronto(idPedido);
+
+        return ResponseEntity.ok(pedidoEvent);
     }
 
     @GetMapping("/{id}")
