@@ -31,7 +31,7 @@ public class RestaurantController {
         return ResponseEntity.ok(restaurantService.listarTodos());
     }
 
-    @PostMapping
+    @PostMapping("/pedidos/{idPedido}/em-rota")
     public ResponseEntity<PedidoStatusEvent> informarPedidoPronto(@PathVariable Long idPedido) {
         PedidoStatusEvent pedidoEvent = pedidoService.informarPedidoPronto(idPedido);
 
