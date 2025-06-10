@@ -1,6 +1,7 @@
 package com.microservico.restaurantService.controller;
 
 import com.microservico.restaurantService.dto.request.RestaurantRequestDTO;
+import com.microservico.restaurantService.dto.response.PedidoDtoResponse;
 import com.microservico.restaurantService.dto.response.RestaurantResponseDTO;
 import com.microservico.restaurantService.event.PedidoStatusEvent;
 import com.microservico.restaurantService.service.PedidoService;
@@ -41,6 +42,11 @@ public class RestaurantController {
     @GetMapping("/{id}")
     public ResponseEntity<RestaurantResponseDTO> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(restaurantService.buscarPorId(id));
+    }
+
+    @GetMapping("/pedidos/restaurante/{idRestaurante}")
+    public ResponseEntity<List<PedidoDtoResponse>> buscarPedidosPorRestaurante(@PathVariable Long idRestaurante) {
+        return ResponseEntity.ok(pedidoService.buscarPedidoPorRestaurante(idRestaurante));
     }
 
     @PutMapping("/{id}")

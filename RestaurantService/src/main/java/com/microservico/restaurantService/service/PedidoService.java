@@ -1,5 +1,6 @@
 package com.microservico.restaurantService.service;
 
+import com.microservico.restaurantService.dto.response.PedidoDtoResponse;
 import com.microservico.restaurantService.event.PedidoCanceladoEvent;
 import com.microservico.restaurantService.event.PedidoStatusEvent;
 import com.microservico.restaurantService.exceptions.RecursoNaoEncontradoException;
@@ -130,5 +131,10 @@ public class PedidoService {
 
     private void publicarPedido(PedidoStatusEvent event, StatusPedido statusPedido) {
         pedidoEventPublisher.publicarStatusPedido(statusPedido, event);
+    }
+
+    public List<PedidoDtoResponse> buscarPedidoPorRestaurante(Long idRestaurante) {
+        return pedidoRepository.findByRestauranteId(idRestaurante).stream()
+                .map(PedidoMapper::toDto).toList();
     }
 }

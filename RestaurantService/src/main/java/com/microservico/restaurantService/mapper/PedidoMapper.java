@@ -1,5 +1,6 @@
 package com.microservico.restaurantService.mapper;
 
+import com.microservico.restaurantService.dto.response.PedidoDtoResponse;
 import com.microservico.restaurantService.event.PedidoStatusEvent;
 import com.microservico.restaurantService.exceptions.RecursoNaoEncontradoException;
 import com.microservico.restaurantService.model.ItemPedido;
@@ -55,5 +56,19 @@ public class PedidoMapper {
         pedidoEvent.setValorTotal(pedido.getValorTotal());
 
         return pedidoEvent;
+    }
+
+    public static PedidoDtoResponse toDto(Pedido pedido) {
+        PedidoDtoResponse dtoResponse = new PedidoDtoResponse();
+
+        dtoResponse.setId(pedido.getId());
+        dtoResponse.setClienteId(pedido.getClienteId());
+        dtoResponse.setRestaurantId(pedido.getRestauranteId());
+        dtoResponse.setItens(pedido.getItens().stream().map(ItemPedidoMapper::toDto).toList());
+        dtoResponse.setDataCriacao(pedido.getDataCriacao());
+        dtoResponse.setStatus(pedido.getStatusPedido());
+        dtoResponse.setValorTotal(pedido.getValorTotal());
+
+        return dtoResponse;
     }
 }
