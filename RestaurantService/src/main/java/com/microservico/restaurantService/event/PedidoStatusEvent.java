@@ -5,25 +5,22 @@ import com.microservico.restaurantService.model.ItemPedido;
 import com.microservico.restaurantService.model.Pedido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PedidoCriadoEvent {
-
-    private Long pedidoId;
-    private Long restauranteId;
-    private Long clienteId;
+@EqualsAndHashCode(callSuper = true)
+public class PedidoStatusEvent extends PedidoEvent{
     private List<ItemPedidoEvent> itens;
     private Double valorTotal;
 
-    public PedidoCriadoEvent(Pedido pedido) {
-        this.pedidoId = pedido.getId();
-        this.restauranteId = pedido.getRestauranteId();
-        this.clienteId = pedido.getClienteId();
+    public PedidoStatusEvent(Pedido pedido) {
+        super(pedido.getId(), pedido.getRestauranteId(), pedido.getClienteId(), pedido.getStatusPedido(), LocalDateTime.now());
         this.itens = pedido.getItens().stream().map(ItemPedidoEvent::new).toList();
         this.valorTotal = pedido.getValorTotal();
     }

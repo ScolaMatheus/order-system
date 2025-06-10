@@ -1,5 +1,7 @@
 package com.microservico.restaurantService.model;
 
+import com.microservico.restaurantService.util.StatusPedido;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,16 +15,29 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Entity
+@Table(name = "tb_pedido")
 public class Pedido {
 
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long clienteId;
+
     private Long restauranteId;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ItemPedido> itens;
+
     private LocalDateTime dataCriacao;
+
     private LocalDateTime dataAtualizacao;
+
+    @Enumerated(EnumType.STRING)
     private StatusPedido statusPedido;
+
     private Double valorTotal;
 
     public Double getValorTotal() {
