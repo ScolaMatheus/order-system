@@ -36,8 +36,7 @@ public class PedidoService {
 
     @Transactional
     public void consumirPedido(PedidoStatusEvent event) {
-
-        boolean pedidoValido = validarRestautanteEItens(event.getPedidoId(), event.getItens());
+        boolean pedidoValido = validarRestautanteEItens(event.getRestauranteId(), event.getItens());
 
         if (pedidoValido) {
             log.info("Pedido {} aceito pelo restaurante {}", event.getPedidoId(), event.getRestauranteId());
@@ -48,31 +47,8 @@ public class PedidoService {
 
         } else {
             log.warn("Pedido {} CANCELADO - restaurante ou item inválido/inativado", event.getPedidoId());
-
-            Pedido pedido = pedidoRepository.findById(event.getPedidoId()).orElseThrow(
-                    () -> new RecursoNaoEncontradoException("Não foi encontrado nenhum pedido para esse id: " + event.getPedidoId())
-            );
-
-            if (pedido.getStatusPedido() != StatusPedido.CANCELADO) {
-                pedido.setStatusPedido(StatusPedido.CANCELADO);
-                pedidoRepository.save(pedido);
-            }
-
-            pedidoEventPublisher.publicarPedidoCancelado(new PedidoCanceladoEvent(
-                    event.getPedidoId(),
-                    event.getRestauranteId(),
-                    event.getClienteId(),
-                    StatusPedido.CANCELADO,
-                    LocalDateTime.now(),
-                    "Pedido cancelado devido a Restaurante ou item inválido/inativado",
-                    "restaurant-service"
-            ));
+            this.processarCancelamentoDePedido(event);
         }
-    }
-
-    private void salvarPedido(PedidoStatusEvent event) {
-        Pedido pedido = PedidoMapper.eventToEntity(event);
-        pedidoRepository.save(pedido);
     }
 
     @Transactional
@@ -95,6 +71,16 @@ public class PedidoService {
         this.publicarPedido(pedidoEvent, StatusPedido.EM_ROTA);
 
         return pedidoEvent;
+    }
+
+    public List<PedidoDtoResponse> buscarPedidoPorRestaurante(Long idRestaurante) {
+        return pedidoRepository.findByRestauranteId(idRestaurante).stream()
+                .map(PedidoMapper::toDto).toList();
+    }
+
+    private void salvarPedido(PedidoStatusEvent event) {
+        Pedido pedido = PedidoMapper.eventToEntity(event);
+        pedidoRepository.save(pedido);
     }
 
     private boolean validarRestautanteEItens(Long idRestaurant, List<PedidoStatusEvent.ItemPedidoEvent> itens) {
@@ -133,8 +119,26 @@ public class PedidoService {
         pedidoEventPublisher.publicarStatusPedido(statusPedido, event);
     }
 
-    public List<PedidoDtoResponse> buscarPedidoPorRestaurante(Long idRestaurante) {
-        return pedidoRepository.findByRestauranteId(idRestaurante).stream()
-                .map(PedidoMapper::toDto).toList();
+    private void processarCancelamentoDePedido(PedidoStatusEvent event) {
+        pedidoRepository.findById(event.getPedidoId()) // Valida se o pedido existe no banco.
+                .ifPresentOrElse(pedido -> {
+                    if (pedido.getStatusPedido() != StatusPedido.CANCELADO) { // Caso ele exista, altero o status dele para cancelado e atualizo no banco.
+                        pedido.setStatusPedido(StatusPedido.CANCELADO);
+                        pedidoRepository.save(pedido);
+                    }
+                }, () -> {
+                    event.setStatusPedido(StatusPedido.CANCELADO); // Caso ele não exista no banco, altero o valor do Status do event, converto ele num pedido e salvo no banco.
+                    pedidoRepository.save(PedidoMapper.eventToEntity(event));
+                });
+
+        pedidoEventPublisher.publicarPedidoCancelado(new PedidoCanceladoEvent(
+                event.getPedidoId(),
+                event.getRestauranteId(),
+                event.getClienteId(),
+                StatusPedido.CANCELADO,
+                LocalDateTime.now(),
+                "Pedido cancelado devido a Restaurante ou item inválido/inativado",
+                "restaurant-service"
+        ));
     }
 }
