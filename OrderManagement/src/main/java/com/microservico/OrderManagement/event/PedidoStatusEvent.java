@@ -2,10 +2,7 @@ package com.microservico.OrderManagement.event;
 
 import com.microservico.OrderManagement.model.ItemPedido;
 import com.microservico.OrderManagement.model.Pedido;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -14,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class PedidoStatusEvent extends PedidoEvent{
     private List<ItemPedidoEvent> itens;
     private Double valorTotal;
