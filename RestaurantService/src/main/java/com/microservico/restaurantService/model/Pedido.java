@@ -21,9 +21,7 @@ import java.util.List;
 @Table(name = "tb_pedido")
 public class Pedido {
 
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
