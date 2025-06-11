@@ -52,6 +52,8 @@ public class PedidoMapper {
         pedidoEvent.setPedidoId(pedido.getId());
         pedidoEvent.setRestauranteId(pedido.getRestauranteId());
         pedidoEvent.setClienteId(pedido.getClienteId());
+        pedidoEvent.setStatusPedido(pedido.getStatusPedido());
+        pedido.setDataAtualizacao(pedido.getDataAtualizacao());
         pedidoEvent.setItens(pedido.getItens().stream().map(PedidoStatusEvent.ItemPedidoEvent::new).toList());
         pedidoEvent.setValorTotal(pedido.getValorTotal());
 
