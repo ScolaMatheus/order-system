@@ -1,6 +1,6 @@
     package com.microservico.OrderManagement.model;
 
     public enum StatusPedido {
-        CRIADO, PREPARANDO, PRONTO, EM_ROTA, ENTREGUE, CANCELADO;
+        CRIADO, PREPARANDO, EM_ROTA, ENTREGUE, CANCELADO
     }
 
