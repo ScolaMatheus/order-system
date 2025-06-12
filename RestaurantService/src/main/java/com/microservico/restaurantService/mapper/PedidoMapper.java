@@ -5,7 +5,6 @@ import com.microservico.restaurantService.event.PedidoStatusEvent;
 import com.microservico.restaurantService.exceptions.RecursoNaoEncontradoException;
 import com.microservico.restaurantService.model.ItemPedido;
 import com.microservico.restaurantService.model.Pedido;
-import com.microservico.restaurantService.util.StatusPedido;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
@@ -21,7 +20,7 @@ public class PedidoMapper {
         pedido.setRestauranteId(event.getRestauranteId());
         pedido.setDataCriacao(LocalDateTime.now());
         pedido.setDataAtualizacao(LocalDateTime.now());
-        pedido.setStatusPedido(StatusPedido.PREPARANDO);
+        pedido.setStatusPedido(event.getStatusPedido());
 
 
         // Mapeia os itens
@@ -41,7 +40,7 @@ public class PedidoMapper {
         }).toList();
 
         pedido.setItens(itens);
-        pedido.setValorTotal(pedido.getValorTotal());
+        pedido.setValorTotal(event.getValorTotal());
 
         return pedido;
     }
