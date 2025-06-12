@@ -43,10 +43,10 @@ public class RabbitMQConfig {
 
     }
 
-    // Exchange do tipo direct
+    // Exchange do tipo topic
     @Bean
-    public DirectExchange pedidoExchange() {
-        return new DirectExchange(PEDIDO_EXCHANGE);
+    public TopicExchange pedidoExchange() {
+        return new TopicExchange(PEDIDO_EXCHANGE);
     }
 
     // Fila que vai receber os eventos do pedido criado
@@ -75,43 +75,43 @@ public class RabbitMQConfig {
 
     // Fila que vai receber os eventos dos pedidos entregues
     @Bean
-    public Queue pedidoEntregeQueue() {
-        return definirFila(PEDIDO_ENTREGE_QUEUE);
+    public Queue pedidoEntregueQueue() {
+        return definirFila(PEDIDO_ENTREGUE_QUEUE);
     }
 
     // Ligação entre a exchange e a fila com uma routing key
     @Bean
-    public Binding pedidoBinding(Queue pedidoQueue, DirectExchange pedidoExchange) {
-        return definirBindinds(pedidoQueue, pedidoExchange, PEDIDO_ROUTING_KEY);
+    public Binding pedidoBinding(Queue pedidoQueue, TopicExchange pedidoExchange) {
+        return definirBindings(pedidoQueue, pedidoExchange, PEDIDO_ROUTING_KEY);
     }
 
     @Bean
-    public Binding pedidoCanceladoBinding(Queue pedidoCanceladoQueue, DirectExchange pedidoExchange) {
-        return definirBindinds(pedidoCanceladoQueue, pedidoExchange, PEDIDO_CANCELADO_ROUTING_KEY);
+    public Binding pedidoCanceladoBinding(Queue pedidoCanceladoQueue, TopicExchange pedidoExchange) {
+        return definirBindings(pedidoCanceladoQueue, pedidoExchange, PEDIDO_CANCELADO_ROUTING_KEY);
     }
 
     @Bean
-    public Binding pedidoPreparandoBinding(Queue pedidoPreparandoQueue, DirectExchange pedidoExchange) {
-        return definirBindinds(pedidoPreparandoQueue, pedidoExchange, PEDIDO_PREPARANDO_ROUTING_KEY);
+    public Binding pedidoPreparandoBinding(Queue pedidoPreparandoQueue, TopicExchange pedidoExchange) {
+        return definirBindings(pedidoPreparandoQueue, pedidoExchange, PEDIDO_PREPARANDO_ROUTING_KEY);
     }
 
     @Bean
-    public Binding pedidoEmRotaBinding(Queue pedidoEmRotaQueue, DirectExchange pedidoExchange) {
-        return definirBindinds(pedidoEmRotaQueue, pedidoExchange, PEDIDO_EM_ROTA_ROUTING_KEY);
+    public Binding pedidoEmRotaBinding(Queue pedidoEmRotaQueue, TopicExchange pedidoExchange) {
+        return definirBindings(pedidoEmRotaQueue, pedidoExchange, PEDIDO_EM_ROTA_ROUTING_KEY);
     }
 
     @Bean
-    public Binding pedidoEntregeBinding(Queue pedidoEntregeQueue, DirectExchange pedidoExchange) {
-        return definirBindinds(pedidoEntregeQueue, pedidoExchange, PEDIDO_ENTREGE_ROUTING_KEY);
+    public Binding pedidoEntregueBinding(Queue pedidoEntregueQueue, TopicExchange pedidoExchange) {
+        return definirBindings(pedidoEntregueQueue, pedidoExchange, PEDIDO_ENTREGUE_ROUTING_KEY);
     }
 
     private Queue definirFila(String nameQueue) {
         return QueueBuilder.durable(nameQueue).build();
     }
 
-    private Binding definirBindinds(Queue queue, DirectExchange directExchange, String routingKey) {
+    private Binding definirBindings(Queue queue, TopicExchange topicExchange, String routingKey) {
         return BindingBuilder.bind(queue)
-                .to(directExchange)
+                .to(topicExchange)
                 .with(routingKey);
     }
 
