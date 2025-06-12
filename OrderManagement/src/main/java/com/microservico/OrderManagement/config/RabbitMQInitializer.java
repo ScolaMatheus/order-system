@@ -2,10 +2,7 @@ package com.microservico.OrderManagement.config;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.core.AmqpAdmin;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +13,7 @@ public class RabbitMQInitializer {
 
     private final AmqpAdmin amqpAdmin;
     private final Queue pedidoQueue;
-    private final DirectExchange pedidoExchange;
+    private final TopicExchange pedidoExchange;
     private final Binding pedidoBinding;
 
     @PostConstruct
