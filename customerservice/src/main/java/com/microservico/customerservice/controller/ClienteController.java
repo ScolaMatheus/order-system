@@ -5,8 +5,10 @@ import com.microservico.customerservice.dto.request.ClienteDtoRequest;
 import com.microservico.customerservice.dto.request.PedidoDtoRequest;
 import com.microservico.customerservice.dto.response.ClienteDtoResponse;
 import com.microservico.customerservice.dto.response.PedidoDtoResponse;
+import com.microservico.customerservice.event.PedidoCanceladoEvent;
+import com.microservico.customerservice.event.PedidoStatusEvent;
 import com.microservico.customerservice.service.ClienteService;
-import com.microservico.customerservice.service.PedidoClient;
+import com.microservico.customerservice.service.PedidoService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ import java.util.List;
 public class ClienteController {
 
     private final ClienteService clienteService;
-    private final PedidoClient pedidoClient;
+    private final PedidoService pedidoService;
 
     @PostMapping()
     public ResponseEntity<ClienteDtoResponse> cadastrarCliente(@Valid @RequestBody ClienteDtoRequest dto) {
@@ -33,10 +35,24 @@ public class ClienteController {
 
     @PostMapping("/pedidos")
     public ResponseEntity<PedidoDtoResponse> fazerPedido(@RequestBody PedidoDtoRequest request) {
-        PedidoDtoResponse pedidoDtoResponse = pedidoClient.criarPedido(request);
+        PedidoDtoResponse pedidoDtoResponse = pedidoService.criarPedido(request);
 
         URI uri = URI.create("/api/pedidos/" + pedidoDtoResponse.id());
         return ResponseEntity.created(uri).body(pedidoDtoResponse);
+    }
+
+    @PatchMapping("/pedidos/{idPedido}/entrega")
+    public ResponseEntity<PedidoStatusEvent> informarPedidoEntregue(@PathVariable Long idPedido) {
+        PedidoStatusEvent pedidoStatusEvent = pedidoService.informarPedidoEntregue(idPedido);
+
+        return ResponseEntity.ok(pedidoStatusEvent);
+    }
+
+    @PostMapping("pedidos/{idPedido}/cancelamento")
+    public ResponseEntity<PedidoCanceladoEvent> cancelarPedido(@PathVariable Long idPedido) {
+        PedidoCanceladoEvent canceladoEvent = pedidoService.processarCancelamentoDePedido(idPedido);
+
+        return ResponseEntity.ok(canceladoEvent);
     }
 
     @GetMapping()
