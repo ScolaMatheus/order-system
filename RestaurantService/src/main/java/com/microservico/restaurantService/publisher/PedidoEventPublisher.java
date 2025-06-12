@@ -26,11 +26,11 @@ public class PedidoEventPublisher {
         log.info("PedidoCanceladoEvent publicado : {}", event);
     }
 
-    public void publicarStatusPedido(StatusPedido statusPedido, PedidoStatusEvent event) {
-        String routingKey = statusPedido.equals(StatusPedido.PREPARANDO)
+    public void publicarStatusPedido(PedidoStatusEvent event) {
+        String routingKey = event.getStatusPedido().equals(StatusPedido.PREPARANDO)
                 ? PEDIDO_PREPARANDO_ROUTING_KEY : PEDIDO_EM_ROTA_ROUTING_KEY;
 
         rabbitTemplate.convertAndSend(PEDIDO_EXCHANGE, routingKey, event);
-        log.info("Pedido {} publicado com status {}", event.getPedidoId(), statusPedido.name());
+        log.info("Pedido {} publicado com status {}", event.getPedidoId(), event.getStatusPedido().name());
     }
 }
