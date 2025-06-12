@@ -35,4 +35,10 @@ public class ControllerExceptionHandler {
         ExceptionDTO exceptionDTO = new ExceptionDTO(message, HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
         return ResponseEntity.badRequest().body(exceptionDTO);
     }
+
+    @ExceptionHandler(StatusIncorretoException.class)
+    public ResponseEntity<ExceptionDTO> handleStatusIncorreto(StatusIncorretoException exception) {
+        ExceptionDTO exceptionDTO = new ExceptionDTO(exception.getMessage(), HttpStatus.BAD_REQUEST.value(), LocalDateTime.now());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionDTO);
+    }
 }
