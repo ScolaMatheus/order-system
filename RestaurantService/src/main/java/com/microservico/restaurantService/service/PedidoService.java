@@ -40,10 +40,11 @@ public class PedidoService {
 
         if (pedidoValido) {
             log.info("Pedido {} aceito pelo restaurante {}", event.getPedidoId(), event.getRestauranteId());
+            event.setStatusPedido(StatusPedido.PREPARANDO);
             this.salvarPedido(event);
 
             log.info("Pedido {} está sendo preparado pelo restaurante {}", event.getPedidoId(), event.getRestauranteId());
-            this.publicarPedido(event, StatusPedido.PREPARANDO);
+            this.publicarPedido(event);
 
         } else {
             log.warn("Pedido {} CANCELADO - restaurante ou item inválido/inativado", event.getPedidoId());
@@ -68,7 +69,7 @@ public class PedidoService {
 
         PedidoStatusEvent pedidoEvent = PedidoMapper.entityToEvent(pedido);
 
-        this.publicarPedido(pedidoEvent, StatusPedido.EM_ROTA);
+        this.publicarPedido(pedidoEvent);
 
         return pedidoEvent;
     }
@@ -76,6 +77,21 @@ public class PedidoService {
     public List<PedidoDtoResponse> buscarPedidoPorRestaurante(Long idRestaurante) {
         return pedidoRepository.findByRestauranteId(idRestaurante).stream()
                 .map(PedidoMapper::toDto).toList();
+    }
+
+    @Transactional
+    public void atualizarPedido(Long idPedido, StatusPedido statusPedido, LocalDateTime dataHoraAtualizacao) {
+        Pedido pedido = pedidoRepository.findById(idPedido).orElseThrow(
+                () -> new RecursoNaoEncontradoException("Pedido não encontrado com esse id: " + idPedido));
+
+        if (pedido.getStatusPedido() != StatusPedido.CANCELADO) {
+            pedido.setStatusPedido(statusPedido);
+            pedido.setDataAtualizacao(dataHoraAtualizacao);
+        }
+
+        pedidoRepository.save(pedido);
+
+        log.info("Pedido {} alterado para status {} às {}",idPedido, statusPedido, dataHoraAtualizacao);
     }
 
     private void salvarPedido(PedidoStatusEvent event) {
@@ -115,8 +131,8 @@ public class PedidoService {
         return !algumItemInvalido;
     }
 
-    private void publicarPedido(PedidoStatusEvent event, StatusPedido statusPedido) {
-        pedidoEventPublisher.publicarStatusPedido(statusPedido, event);
+    private void publicarPedido(PedidoStatusEvent event) {
+        pedidoEventPublisher.publicarStatusPedido(event);
     }
 
     private void processarCancelamentoDePedido(PedidoStatusEvent event) {
