@@ -36,4 +36,12 @@ public class PedidoEventPublisher {
         log.info("PedidoStatusEvent {} foi entregue ao cliente {}", pedidoEvent, pedidoEvent.getClienteId());
     }
 
+    public void publicarPedidoCriado(PedidoStatusEvent pedidoEvent) {
+        rabbitTemplate.convertAndSend(
+                PEDIDO_EXCHANGE,
+                PEDIDO_ROUTING_KEY,
+                pedidoEvent
+        );
+        log.info("PedidoStatusEvent {} foi criado no customer-service", pedidoEvent);
+    }
 }

@@ -1,10 +1,12 @@
 package com.microservico.customerservice.mapper;
 
+import com.microservico.customerservice.dto.request.PedidoDtoRequest;
 import com.microservico.customerservice.dto.response.PedidoDtoResponse;
 import com.microservico.customerservice.event.PedidoStatusEvent;
 import com.microservico.customerservice.exceptions.RecursoNaoEncontradoException;
 import com.microservico.customerservice.model.ItemPedido;
 import com.microservico.customerservice.model.Pedido;
+import com.microservico.customerservice.util.StatusPedido;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
@@ -70,5 +72,26 @@ public class PedidoMapper {
                 pedido.getStatusPedido(),
                 pedido.getValorTotal()
         );
+    }
+
+    public static Pedido toEntity(PedidoDtoRequest request) {
+        Pedido pedido = new Pedido();
+
+        pedido.setClienteId(request.getIdCliente());
+        pedido.setRestauranteId(request.getRestauranteId());
+        pedido.setStatusPedido(StatusPedido.CRIADO);
+
+        //Associa os itens ao pedido
+        List<ItemPedido> itens = request.getItens().stream()
+                .map(itemDto -> ItemPedidoMapper.toEntity(itemDto, pedido))
+                .toList();
+
+        pedido.setItens(itens);
+
+        Double vlTotalPedido = itens.stream().mapToDouble(ItemPedido::getValorTotal).sum();
+
+        pedido.setValorTotal(vlTotalPedido);
+
+        return pedido;
     }
 }

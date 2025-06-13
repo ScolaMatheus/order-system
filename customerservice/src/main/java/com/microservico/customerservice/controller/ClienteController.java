@@ -35,7 +35,7 @@ public class ClienteController {
 
     @PostMapping("/pedidos")
     public ResponseEntity<PedidoDtoResponse> fazerPedido(@RequestBody PedidoDtoRequest request) {
-        PedidoDtoResponse pedidoDtoResponse = pedidoService.criarPedido(request);
+        PedidoDtoResponse pedidoDtoResponse = pedidoService.criarPedidoEvent(request);
 
         URI uri = URI.create("/api/pedidos/" + pedidoDtoResponse.id());
         return ResponseEntity.created(uri).body(pedidoDtoResponse);

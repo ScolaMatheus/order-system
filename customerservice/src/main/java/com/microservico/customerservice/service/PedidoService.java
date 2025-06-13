@@ -7,82 +7,41 @@ import com.microservico.customerservice.event.PedidoStatusEvent;
 import com.microservico.customerservice.exceptions.RecursoNaoEncontradoException;
 import com.microservico.customerservice.exceptions.StatusIncorretoException;
 import com.microservico.customerservice.mapper.PedidoMapper;
-import com.microservico.customerservice.model.ItemPedido;
 import com.microservico.customerservice.model.Pedido;
 import com.microservico.customerservice.publisher.PedidoEventPublisher;
 import com.microservico.customerservice.repositories.PedidoRepository;
 import com.microservico.customerservice.util.StatusPedido;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.*;
 
 import java.time.LocalDateTime;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class PedidoService {
 
-    private final String orderManagementUrl;
     private final PedidoEventPublisher pedidoEventPublisher;
     private final PedidoRepository pedidoRepository;
 
-    public PedidoService(@Value("${order.management.url}") String orderManagementUrl, PedidoEventPublisher pedidoEventPublisher, PedidoRepository pedidoRepository) {
-        this.orderManagementUrl = orderManagementUrl;
-        this.pedidoEventPublisher = pedidoEventPublisher;
-        this.pedidoRepository = pedidoRepository;
-    }
-
     @Transactional
-    public PedidoDtoResponse criarPedido(PedidoDtoRequest request) {
-        RestTemplate restTemplate = new RestTemplate();
+    public PedidoDtoResponse criarPedidoEvent(PedidoDtoRequest request) {
+        // Converter o Pedido
+        Pedido pedido = PedidoMapper.toEntity(request);
 
-        try {
-            PedidoDtoResponse dtoResponse = restTemplate.postForObject(
-                    orderManagementUrl + "/api/pedidos",
-                    request,
-                    PedidoDtoResponse.class
-            );
+        // Salvar o Pedido no banco
+        pedido = pedidoRepository.save(pedido);
 
-            if (dtoResponse != null) {
-                Pedido pedido = new Pedido();
+        // Converter o Pedido em Event
+        PedidoStatusEvent statusEvent = PedidoMapper.entityToEvent(pedido);
 
-                pedido.setId(dtoResponse.id());
-                pedido.setClienteId(dtoResponse.clienteId());
-                pedido.setRestauranteId(request.getRestauranteId());
-                pedido.setStatusPedido(dtoResponse.status());
-                pedido.setValorTotal(dtoResponse.valorTotal());
-                pedido.setItens(dtoResponse.itens().stream().map(itemPedidoDtoResponse -> new ItemPedido(
-                        itemPedidoDtoResponse.id(),
-                        pedido,
-                        itemPedidoDtoResponse.produtoId(),
-                        itemPedidoDtoResponse.nomeProduto(),
-                        itemPedidoDtoResponse.precoUnitario(),
-                        itemPedidoDtoResponse.quantidade()
-                )).toList());
-                pedido.setDataCriacao(dtoResponse.dataCriacao());
-                pedido.setDataAtualizacao(LocalDateTime.now());
+        // Publicar a criação do Pedido
+        pedidoEventPublisher.publicarPedidoCriado(statusEvent);
 
-                return PedidoMapper.toDto(pedidoRepository.save(pedido));
-            } else {
-                throw new RecursoNaoEncontradoException("Houve um erro ao criar o pedido no OrderManagement.");
-            }
-        } catch (HttpClientErrorException e) {
-            log.warn("Erro 4xx ao criar pedido: {}", e.getResponseBodyAsString());
-            throw new RuntimeException("Pedido inválido");
-        } catch (HttpServerErrorException e) {
-            log.error("Erro 5xx no OrderManagement: {}", e.getStatusCode());
-            throw new RuntimeException("Erro no sistema de pedidos");
-        } catch (ResourceAccessException e) {
-            log.error("Timeout ou falha de rede ao acessar OrderManagement: {}", e.getMessage());
-            throw new RuntimeException("Serviço de pedidos indisponível");
-        } catch (RestClientException e) {
-            throw new RuntimeException(e);
-        }catch (Exception e) {
-            log.error("Erro inesperado ao criar pedido", e);
-            throw new RuntimeException("Erro ao criar pedido");
-        }
+        // Retornar o valor para a controller
+        return PedidoMapper.toDto(pedido);
     }
 
     @Transactional
