@@ -2,6 +2,7 @@ package com.microservico.OrderManagement.mapper;
 
 import com.microservico.OrderManagement.dto.request.ItemPedidoDtoRequest;
 import com.microservico.OrderManagement.dto.response.ItemPedidoDtoResponse;
+import com.microservico.OrderManagement.event.PedidoStatusEvent;
 import com.microservico.OrderManagement.model.ItemPedido;
 import com.microservico.OrderManagement.model.Pedido;
 
@@ -30,5 +31,17 @@ public class ItemPedidoMapper {
 
         return itensDto;
 
+    }
+
+    public static ItemPedido eventToEntity(PedidoStatusEvent.ItemPedidoEvent itemPedidoEvent, Pedido pedido) {
+        ItemPedido itemPedido = new ItemPedido();
+
+        itemPedido.setPedido(pedido);
+        itemPedido.setProdutoId(itemPedidoEvent.getProdutoId());
+        itemPedido.setNomeProduto(itemPedidoEvent.getNomeProduto());
+        itemPedido.setPrecoUnitario(itemPedidoEvent.getPrecoUnitario());
+        itemPedido.setQuantidade(itemPedidoEvent.getQuantidade());
+
+        return itemPedido;
     }
 }

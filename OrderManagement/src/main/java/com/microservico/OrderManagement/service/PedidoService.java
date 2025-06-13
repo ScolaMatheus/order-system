@@ -1,12 +1,10 @@
 package com.microservico.OrderManagement.service;
 
-import com.microservico.OrderManagement.dto.request.PedidoDtoRequest;
 import com.microservico.OrderManagement.dto.response.PedidoDtoResponse;
 import com.microservico.OrderManagement.event.PedidoStatusEvent;
 import com.microservico.OrderManagement.exceptions.RecursoNaoEncontradoException;
 import com.microservico.OrderManagement.mapper.PedidoMapper;
 import com.microservico.OrderManagement.model.*;
-import com.microservico.OrderManagement.publisher.PedidoEventPublisher;
 import com.microservico.OrderManagement.repositories.PedidoRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -22,34 +20,26 @@ import java.util.List;
 @AllArgsConstructor
 public class PedidoService {
 
-    private final PedidoEventPublisher pedidoEventPublisher;
     private final PedidoRepository pedidoRepository;
-    private final PedidoMapper pedidoMapper;
 
     @Transactional
-    public PedidoDtoResponse criarPedido(PedidoDtoRequest dto) {
+    public void criarPedido(PedidoStatusEvent event) {
 
-        Pedido pedido = pedidoMapper.toEntity(dto);
+        Pedido pedido = PedidoMapper.eventToEntity(event);
 
-        Pedido pedidoSalvo = pedidoRepository.save(pedido);
-
-        PedidoStatusEvent event = new PedidoStatusEvent(pedidoSalvo);
-
-        pedidoEventPublisher.publicarPedidoCriado(event);
-
-        return pedidoMapper.toDto(pedidoSalvo);
+        pedidoRepository.save(pedido);
     }
 
     public List<PedidoDtoResponse> buscarPedidos() {
         return pedidoRepository.findAll()
                 .stream()
-                .map(pedidoMapper::toDto)
+                .map(PedidoMapper::toDto)
                 .toList();
     }
 
     public PedidoDtoResponse buscarPedidoPorId(Long idPedido) {
         return pedidoRepository.findById(idPedido)
-                .map(pedidoMapper::toDto)
+                .map(PedidoMapper::toDto)
                 .orElseThrow(() -> new RecursoNaoEncontradoException("Pedido não encontrado com id: " + idPedido));
     }
 
