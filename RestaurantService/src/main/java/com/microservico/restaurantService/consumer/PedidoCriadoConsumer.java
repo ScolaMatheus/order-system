@@ -13,7 +13,7 @@ import static com.microservico.restaurantService.util.RabbitConstants.PEDIDO_QUE
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PedidoEventConsumer {
+public class PedidoCriadoConsumer {
 
     private final PedidoService pedidoService;
 
