@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_DB: orderdb
+      POSTGRES_USER: orderuser
+      POSTGRES_PASSWORD: orderpass
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - springnet
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "orderuser" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ordermanagement
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: on-failure
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/orderdb
+      SPRING_DATASOURCE_USERNAME: orderuser
+      SPRING_DATASOURCE_PASSWORD: orderpass
+    ports:
+      - "8080:8080"
+    networks:
+      - springnet
+
+volumes:
+  pgdata:
+
+networks:
+  springnet:
+    driver: bridge

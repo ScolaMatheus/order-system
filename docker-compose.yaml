@@ -73,7 +73,7 @@ services:
 
   order-management:
     build:
-      context: ./OrderManagement
+      context: ./order-management
       dockerfile: Dockerfile
     container_name: order-management
     depends_on:
@@ -85,14 +85,16 @@ services:
       SPRING_DATASOURCE_USERNAME: orderuser
       SPRING_DATASOURCE_PASSWORD: orderpass
       RABBIT_INIT_ENABLED: "true"
+      DEBUG_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
     ports:
       - "8080:8080"
+      - "5005:5005"
     networks:
       - springnet
 
   customer-service:
     build:
-      context: ./customerservice
+      context: ./customer-service
       dockerfile: Dockerfile
     container_name: customer-service
     depends_on:
@@ -103,14 +105,16 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-customer:5432/customerdb
       SPRING_DATASOURCE_USERNAME: customeruser
       SPRING_DATASOURCE_PASSWORD: customerpass
+      DEBUG_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5006"
     ports:
       - "8081:8081"
+      - "5006:5006"
     networks:
       - springnet
 
   restaurant-service:
     build:
-      context: ./RestaurantService
+      context: ./restaurant-service
       dockerfile: Dockerfile
     container_name: restaurant-service
     depends_on:
@@ -121,8 +125,10 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-restaurant:5432/restaurantdb
       SPRING_DATASOURCE_USERNAME: restaurantuser
       SPRING_DATASOURCE_PASSWORD: restaurantpass
+      DEBUG_OPTS: "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5007"
     ports:
       - "8082:8082"
+      - "5007:5007"
     networks:
       - springnet
 

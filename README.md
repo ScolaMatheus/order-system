@@ -4,7 +4,7 @@ Este repositório contém o sistema **OrderSystem**, uma aplicação baseada em 
 
 ---
 
-## 📦 Estrutura do Projeto
+## 📦 Estrutura do ProjetoA
 
 O sistema está organizado em três micro-serviços:
 
