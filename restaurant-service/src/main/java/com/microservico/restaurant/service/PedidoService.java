@@ -56,20 +56,24 @@ public class PedidoService {
     public PedidoStatusEvent informarPedidoPronto(Long idPedido) {
         // Buscar pedido.
         Pedido pedido = pedidoRepository.findById(idPedido).orElseThrow(
-                () -> new RecursoNaoEncontradoException("Não foi encontrado nenhum pedido para esse id: " + idPedido)
-        );
+                () -> {
+                    log.error("Pedido não encontrado com esse id: {}", idPedido);
+                    return new RecursoNaoEncontradoException("Não foi encontrado nenhum pedido para esse id: " + idPedido);
+                });
 
         // Atualizando status do pedido na base.
         if (pedido.getStatusPedido() == StatusPedido.PREPARANDO) {
             pedido.setStatusPedido(StatusPedido.EM_ROTA);
             pedidoRepository.save(pedido);
         } else {
+            log.error("O pedido {} não está com o status correto para colocar o pedido em rota. Status atual: {}", pedido.getId(), pedido.getStatusPedido().name());
             throw new StatusIncorretoException("O pedido: " + idPedido + " não está com o status correto para colocar o pedido em rota. Status atual: " + pedido.getStatusPedido().name());
         }
 
         PedidoStatusEvent pedidoEvent = PedidoMapper.entityToEvent(pedido);
 
         this.publicarPedido(pedidoEvent);
+        log.info("Pedido {} está em rota de entrega", pedidoEvent.getPedidoId());
 
         return pedidoEvent;
     }
@@ -108,7 +112,7 @@ public class PedidoService {
             return false;
         }
 
-        if (!restaurant.isAtivo()) {
+        if (!restaurant.getAtivo()) {
             log.warn("Restaurante {} está inativado!", idRestaurant);
             return false;
         }

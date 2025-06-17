@@ -22,7 +22,7 @@ public class RestaurantMapper {
         dto.setId(restaurant.getId());
         dto.setNome(restaurant.getNome());
         dto.setEndereco(restaurant.getEndereco());
-        dto.setAtivo(restaurant.isAtivo());
+        dto.setAtivo(restaurant.getAtivo());
 
         return dto;
     }

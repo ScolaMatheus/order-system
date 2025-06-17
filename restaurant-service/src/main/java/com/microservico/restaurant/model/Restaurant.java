@@ -26,7 +26,7 @@ public class Restaurant {
     private String endereco;
 
     @Column(nullable = false)
-    private boolean ativo;
+    private Boolean ativo;
 
     @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MenuItem> cardapio;

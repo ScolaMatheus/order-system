@@ -8,6 +8,6 @@ public class MenuItemResponseDTO {
     private String nome;
     private Double preco;
     private Long restaurantId;
-    private boolean ativo;
+    private Boolean ativo;
 
 }
