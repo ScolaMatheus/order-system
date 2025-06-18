@@ -48,10 +48,13 @@ public class PedidoService {
         Pedido pedido = pedidoRepository.findById(idPedido).orElseThrow(
                 () -> new RecursoNaoEncontradoException("Pedido não encontrado com esse id: " + idPedido));
 
-        if (pedido.getStatusPedido() != StatusPedido.CANCELADO) {
-            pedido.setStatusPedido(statusPedido);
-            pedido.setDataAtualizacao(dataHoraAtualizacao);
+        if (pedido.getStatusPedido() == StatusPedido.CANCELADO) {
+            log.info("Pedido {} não foi alterado pois já está cancelado.", idPedido);
+            return;
         }
+
+        pedido.setStatusPedido(statusPedido);
+        pedido.setDataAtualizacao(dataHoraAtualizacao);
 
         pedidoRepository.save(pedido);
 
