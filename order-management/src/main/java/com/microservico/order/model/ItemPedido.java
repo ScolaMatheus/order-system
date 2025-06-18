@@ -1,18 +1,20 @@
     package com.microservico.order.model;
 
     import jakarta.persistence.*;
+    import lombok.AllArgsConstructor;
     import lombok.Data;
     import lombok.NoArgsConstructor;
 
     @Entity
     @Table(name = "tb_item_pedido")
     @Data
+    @AllArgsConstructor
     @NoArgsConstructor
     public class ItemPedido {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private long id;
+        private Long id;
 
         @ManyToOne
         @JoinColumn(name = "pedido_id", nullable = false)
