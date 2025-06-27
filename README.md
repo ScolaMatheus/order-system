@@ -1,57 +1,112 @@
-# OrderSystem – Sistema de Pedidos com Microserviços
+# 🧾 Order System - Microserviços com Spring Boot, RabbitMQ e PostgreSQL
 
-Este repositório contém o sistema **OrderSystem**, uma aplicação baseada em micro-serviços construída com **Spring Boot**, **RabbitMQ**, **PostgreSQL** e **Docker**, utilizando arquitetura orientada a eventos. O objetivo é simular um sistema de pedidos no qual diferentes serviços se comunicam entre si de forma desacoplada e assíncrona.
+Este projeto é um sistema gerenciador de pedidos distribuído, baseado em **microserviços** utilizando **Spring Boot**, comunicação via **RabbitMQ**, persistência em **PostgreSQL** e documentação com **Swagger**.
+
+---
+### 🧭 Fluxo de Eventosta
+
+- Cliente → `customer-service`: `POST /api/pedidos`
+- `customer-service` → Exchange: `pedido.status.criado`
+- Consumidores:
+   - `order-management`: salva pedido
+   - `restaurant-service`: valida pedido
+      - Se válido → `pedido.status.preparando`
+      - Se inválido → `pedido.status.cancelado`
+- Todos escutam os eventos `preparando`/`cancelado`
+- Quando o preparo do pedido for concluído:
+   - `restaurant-service` chama endpoint `POST /pedidos/{id}/em-rota`
+   - Publica `pedido.status.em-rota`
+   - Aplicações envolvidas atualizam status conforme evento
+- Quando o pedido for entregue:
+   - `customer-service` chama endpoint `PATCH /clientes/pedidos/{id}/entrega`
+   - Publica `pedido.status.entregue`
+   - Aplicações envolvidas atualizam status conforme evento
+---
+
+## 📦 Microserviços
+
+### 1. customer-service
+- CRUD de clientes
+- Envia pedidos via evento
+- Consome eventos de atualização de status
+- Informa pedido entregue
+
+### 2. order-management
+- Gerencia e persiste pedidos
+- Atualiza status com base nos eventos recebidos
+
+### 3. restaurant-service
+- Gerencia restaurantes e itens
+- Valida pedidos e responde via evento
+- Informa quando pedido estiver em rota de entrega
 
 ---
 
-## 📦 Estrutura do ProjetoA
+## 🧪 Tecnologias utilizadas
 
-O sistema está organizado em três micro-serviços:
-
-### 1. `customer-service`
-Responsável pela gestão de clientes. Permite criar, buscar, atualizar e deletar informações dos clientes.
-> Exemplo de dados: nome, CPF, telefone, e-mail.
-
-### 2. `order-management`
-Centraliza o fluxo dos pedidos. É o serviço orquestrador que recebe requisições de novos pedidos, valida se o cliente e o restaurante existem e publica eventos de criação ou cancelamento de pedidos via RabbitMQ.
-
-### 3. `restaurant-service`
-Gerencia os restaurantes e os itens do cardápio. Também é responsável por validar se um restaurante e seus produtos existem e estão disponíveis quando um pedido é criado.
-
----
-
-## 🧩 Tecnologias Utilizadas
-
-- Java com Spring Boot
-- PostgreSQL (banco separado por serviço)
-- RabbitMQ (mensageria entre serviços)
+- Java 17
+- Spring Boot
+- Spring Data JPA
+- RabbitMQ
+- PostgreSQL
+- Swagger/OpenAPI
 - Docker e Docker Compose
-- Swagger (documentação das APIs)
+- Lombok
 
 ---
 
-## 🛠️ Como Rodar o Projeto
+## 📦 Execução do projeto
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/seu-usuario/order-system.git
-   cd order-system
-   
-2. Suba os containers com Docker:
-    ````bash
-   docker-compose up
-3. Execute cada micro-serviço individualmente (via a sua IDE ou terminal):
-- customer-service
-- order-management
-- restaurant-service
+Requisitos:
+- Java 17+
+- Maven
+- Docker
 
-## 📚 Em Desenvolvimento
-- Validação de pedidos com itens inválidos
+### 1. Subir os containers com Docker Compose
+```bash
+docker-compose up -d
+```
 
-- Confirmação de recebimento de mensagens RabbitMQ
+### 2. ‘Build’ e execução de cada serviço
+```bash
+cd customer-service
+./mvnw clean install
+java -jar target/customer-service.jar
+```
 
-- Documentação de endpoints no Swagger
+Repita para os outros serviços (`order-management`, `restaurant-service`).
+
+---
+
+## 📜 Documentação Swagger
+
+- customer-service: `http://localhost:8081/swagger-ui.html`
+- order-management: `http://localhost:8082/swagger-ui.html`
+- restaurant-service: `http://localhost:8083/swagger-ui.html`
+
+---
+
+## 🔁 Comunicação via eventos
+
+| Evento                        | Emissor             | Consumidor(es)                           |
+|------------------------------|---------------------|------------------------------------------|
+| `pedido.status.criado`       | customer-service    | order-management, restaurant-service     |
+| `pedido.status.preparando`   | restaurant-service  | customer-service, order-management       |
+| `pedido.status.cancelado`    | restaurant-service  | customer-service, order-management       |
+| `pedido.status.em-rota`      | restaurant-service  | customer-service, order-management       |
+| `pedido.status.entregue`     | customer-service    | restaurant-service, order-management       |
+
+---
+
+## 🛡️ Boas práticas aplicadas
+
+- Separação de responsabilidades por microsserviço
+- Comunicação assíncrona orientada a eventos
+- Tratamento de exceções centralizado
+- Testes unitários por serviço
+- Swagger para documentação de APIs
+---
 
 ## 🧑‍💻 Autor
-Desenvolvido por Matheus Scola\
-[linkedin](https://www.linkedin.com/in/matheus-scola/)
+
+Projeto desenvolvido por Matheus Scola com fins educacionais e de demonstração de arquitetura de microserviços com Spring Boot.
