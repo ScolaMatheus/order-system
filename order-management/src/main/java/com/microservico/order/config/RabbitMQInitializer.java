@@ -12,15 +12,15 @@ import org.springframework.stereotype.Component;
 public class RabbitMQInitializer {
 
     private final AmqpAdmin amqpAdmin;
-    private final Queue pedidoQueue;
+    private final Queue pedidoCriadoQueue;
     private final TopicExchange pedidoExchange;
-    private final Binding pedidoBinding;
+    private final Binding pedidoCriadoBinding;
 
     @PostConstruct
     public void init() {
-        amqpAdmin.declareQueue(pedidoQueue);
+        amqpAdmin.declareQueue(pedidoCriadoQueue);
         amqpAdmin.declareExchange(pedidoExchange);
-        amqpAdmin.declareBinding(pedidoBinding);
+        amqpAdmin.declareBinding(pedidoCriadoBinding);
     }
 
 }
