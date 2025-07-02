@@ -133,7 +133,7 @@ public class RabbitMQConfig {
     // Ligação entre a exchange e a fila com uma routing key
     @Bean
     public Binding pedidoCanceladoBinding(Queue pedidoCanceladoQueue, TopicExchange pedidoExchange) {
-        return definirBindings(pedidoCanceladoQueue, pedidoExchange, PEDIDO_CANCELADO_ROUTING_KEY);
+        return definirBindings(pedidoCanceladoQueue, pedidoExchange, PEDIDO_CANCELADO_ROUTING_KEY_ALL);
     }
 
     // Ligação entre a exchange e a fila com uma routing key para caso de falhas no consumo
