@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+import static com.microservico.customer.util.OrigemCancelamento.CUSTOMER_SERVICE;
+
 @Service
 @Slf4j
 @AllArgsConstructor
@@ -106,7 +108,7 @@ public class PedidoService {
                 StatusPedido.CANCELADO,
                 LocalDateTime.now(),
                 "Pedido cancelado por decisão do cliente",
-                "customer-service"
+                CUSTOMER_SERVICE.name()
         );
 
         pedidoEventPublisher.publicarPedidoCancelado(canceladoEvent);

@@ -21,7 +21,7 @@ public class PedidoEventPublisher {
     public void publicarPedidoCancelado(PedidoCanceladoEvent event) {
         rabbitTemplate.convertAndSend(
                 PEDIDO_EXCHANGE,
-                PEDIDO_CANCELADO_ROUTING_KEY,
+                PEDIDO_CANCELADO_ROUTING_KEY_CUSTOMER,
                 event
         );
         log.info("PedidoCanceladoEvent publicado : {}", event);
@@ -39,7 +39,7 @@ public class PedidoEventPublisher {
     public void publicarPedidoCriado(PedidoStatusEvent pedidoEvent) {
         rabbitTemplate.convertAndSend(
                 PEDIDO_EXCHANGE,
-                PEDIDO_ROUTING_KEY,
+                PEDIDO_CRIADO_ROUTING_KEY,
                 pedidoEvent
         );
         log.info("PedidoStatusEvent {} foi criado no customer-service", pedidoEvent);

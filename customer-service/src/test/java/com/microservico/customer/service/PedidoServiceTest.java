@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import static com.microservico.customer.util.OrigemCancelamento.CUSTOMER_SERVICE;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -178,7 +179,7 @@ public class PedidoServiceTest {
 
         assertThat(evento.getPedidoId()).isEqualTo(pedidoId);
         assertThat(evento.getStatusPedido()).isEqualTo(StatusPedido.CANCELADO);
-        assertThat(evento.getOrigemCancelamento()).isEqualTo("customer-service");
+        assertThat(evento.getOrigemCancelamento()).isEqualTo(CUSTOMER_SERVICE.name());
         assertThat(evento.getMotivoCancelamento()).contains("cliente");
     }
 
