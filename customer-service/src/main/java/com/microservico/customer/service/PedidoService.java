@@ -27,9 +27,13 @@ public class PedidoService {
 
     private final PedidoEventPublisher pedidoEventPublisher;
     private final PedidoRepository pedidoRepository;
+    private final ClienteService clienteService;
 
     @Transactional
     public PedidoDtoResponse criarPedidoEvent(PedidoDtoRequest request) {
+        //Validar se o cliente existe
+        clienteService.buscarClientePorId(request.getIdCliente());
+
         // Converter o Pedido
         Pedido pedido = PedidoMapper.toEntity(request);
 
