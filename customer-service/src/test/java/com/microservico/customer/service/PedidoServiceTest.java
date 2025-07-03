@@ -42,6 +42,9 @@ public class PedidoServiceTest {
     @InjectMocks
     PedidoService pedidoService;
 
+    @Mock
+    ClienteService clienteService;
+
     @Test
     void deveCriarPedidoEPublicarEventoComSucesso() {
         Long restauranteId = 1L;
@@ -67,6 +70,28 @@ public class PedidoServiceTest {
         assertThat(response.clienteId()).isEqualTo(request.getIdCliente());
         assertThat(response.itens()).hasSize(1);
         assertThat(response.status()).isEqualTo(StatusPedido.CRIADO);
+    }
+
+    @Test
+    void naoDeveCriarPedidoQuandoClienteNaoExiste() {
+        Long clienteIdInexistente = 999L;
+
+        PedidoDtoRequest request = new PedidoDtoRequest(
+                clienteIdInexistente,
+                1L,
+                List.of(new ItemPedidoDtoRequest(100L, "Pastel de queijo", 2, 14.0))
+        );
+
+        // Simula o comportamento do clienteService para lançar exceção
+        when(clienteService.buscarClientePorId(clienteIdInexistente))
+                .thenThrow(new RecursoNaoEncontradoException("Cliente não encontrado"));
+
+        // Verifica que a exceção é lançada
+        assertThrows(RecursoNaoEncontradoException.class, () -> pedidoService.criarPedidoEvent(request));
+
+        // Verifica que nenhum pedido foi salvo nem evento publicado
+        verify(pedidoRepository, never()).save(any());
+        verify(pedidoEventPublisher, never()).publicarPedidoCriado(any());
     }
 
     @Test
