@@ -23,7 +23,7 @@ public class PedidoEntregueConsumer extends RabbitUtil {
     public void consumirPedidoEntregue(PedidoEvent event, Message message) {
         int tentativas = getTentativas(message);
 
-        if (tentativas > 3) {
+        if (tentativas >= 3) {
             log.warn("Mensagem ignorada após {} tentativas: {}", tentativas, event);
             return;
         }

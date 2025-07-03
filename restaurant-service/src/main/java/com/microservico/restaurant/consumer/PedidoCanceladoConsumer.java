@@ -10,7 +10,6 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import static com.microservico.restaurant.util.OrigemCancelamento.CUSTOMER_SERVICE;
 import static com.microservico.restaurant.util.OrigemCancelamento.RESTAURANT_SERVICE;
 import static com.microservico.restaurant.util.RabbitConstants.PEDIDO_CANCELADO_QUEUE;
 
@@ -31,7 +30,7 @@ public class PedidoCanceladoConsumer extends RabbitUtil {
 
         int tentativas = getTentativas(message);
 
-        if (tentativas > 3) {
+        if (tentativas >= 3) {
             log.warn("Mensagem ignorada após {} tentativas: {}", tentativas, event);
             return;
         }
