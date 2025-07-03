@@ -183,7 +183,7 @@ public class RabbitMQConfig {
         args.put("x-dead-letter-exchange", PEDIDO_EXCHANGE_DLX);
         args.put("x-dead-letter-routing-key", retryRoutingKey);
 
-        return new Queue(nameQueue, true, false, false, args);
+        return QueueBuilder.durable(nameQueue).withArguments(args).build();
     }
 
     private Queue definirFilaRetry(String retryQueueName, String nameRoutingKey) {
