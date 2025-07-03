@@ -30,7 +30,7 @@ public class PedidoCanceladoConsumer extends RabbitUtil {
         int tentativas = getTentativas(message);
         log.info("Pedido cancelado recebido: {}", event);
 
-        if (tentativas > 3) {
+        if (tentativas >= 3) {
             log.warn("Mensagem ignorada após {} tentativas: {}", tentativas, event);
             return;
         }

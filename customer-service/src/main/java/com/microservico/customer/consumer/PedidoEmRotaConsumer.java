@@ -25,7 +25,7 @@ public class PedidoEmRotaConsumer extends RabbitUtil {
         int tentativas = getTentativas(message);
         log.info("Pedido em rota de entrega recebido: {}", event);
 
-        if (tentativas > 3) {
+        if (tentativas >= 3) {
             log.warn("Mensagem ignorada após {} tentativas: {}", tentativas, event);
             return;
         }
