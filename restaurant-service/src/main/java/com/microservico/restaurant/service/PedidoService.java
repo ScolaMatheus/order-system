@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.microservico.restaurant.util.OrigemCancelamento.RESTAURANT_SERVICE;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -158,7 +160,7 @@ public class PedidoService {
                 StatusPedido.CANCELADO,
                 LocalDateTime.now(),
                 "Pedido cancelado devido a Restaurante ou item inválido/inativado",
-                "restaurant-service"
+                RESTAURANT_SERVICE.name()
         ));
     }
 }
