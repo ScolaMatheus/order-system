@@ -5,6 +5,8 @@
     import lombok.Data;
     import lombok.NoArgsConstructor;
 
+    import java.math.BigDecimal;
+
     @Entity
     @Table(name = "tb_item_pedido")
     @Data
@@ -26,13 +28,15 @@
         @Column(nullable = false)
         private String nomeProduto;
 
-        @Column(nullable = false)
-        private Double precoUnitario;
+        @Column(precision = 10, scale = 2, nullable = false)
+        private BigDecimal precoUnitario;
 
         @Column(nullable = false)
         private Integer quantidade;
 
-        public Double getValorTotal() {
-            return this.precoUnitario * this.quantidade;
+        public BigDecimal getValorTotal() {
+            if (precoUnitario == null || quantidade == null)
+                return BigDecimal.ZERO;
+            return precoUnitario.multiply(BigDecimal.valueOf(quantidade));
         }
     }

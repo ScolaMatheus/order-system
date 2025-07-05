@@ -5,6 +5,7 @@ import com.microservico.order.event.PedidoStatusEvent;
 import com.microservico.order.model.*;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Component
@@ -38,7 +39,7 @@ public class PedidoMapper {
 
         pedido.setItens(itens);
 
-        Double vlTotalPedido = itens.stream().mapToDouble(ItemPedido::getValorTotal).sum();
+        BigDecimal vlTotalPedido = itens.stream().map(ItemPedido::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         pedido.setValorTotal(vlTotalPedido);
 

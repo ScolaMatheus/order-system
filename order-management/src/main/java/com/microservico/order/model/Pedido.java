@@ -1,5 +1,6 @@
 package com.microservico.order.model;
 
+import com.microservico.order.util.StatusPedido;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -7,6 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -42,13 +45,13 @@ public class Pedido {
     @Column(nullable = false, name = "status")
     private StatusPedido statusPedido;
 
-    @Column(nullable = false)
-    private Double valorTotal;
+    @Column(precision = 10, scale = 2, nullable = false)
+    private BigDecimal valorTotal;
 
-    public Double getValorTotal() {
-        if (itens == null) return 0.0;
+    public BigDecimal getValorTotal() {
+        if (itens == null) return new BigDecimal(0);
         return itens.stream()
-                .mapToDouble(ItemPedido::getValorTotal)
-                .sum();
+                .map(ItemPedido::getValorTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

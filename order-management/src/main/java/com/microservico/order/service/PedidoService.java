@@ -6,6 +6,7 @@ import com.microservico.order.exceptions.RecursoNaoEncontradoException;
 import com.microservico.order.mapper.PedidoMapper;
 import com.microservico.order.model.*;
 import com.microservico.order.repositories.PedidoRepository;
+import com.microservico.order.util.StatusPedido;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

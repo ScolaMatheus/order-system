@@ -5,7 +5,7 @@ import com.microservico.order.event.PedidoStatusEvent;
 import com.microservico.order.exceptions.RecursoNaoEncontradoException;
 import com.microservico.order.model.ItemPedido;
 import com.microservico.order.model.Pedido;
-import com.microservico.order.model.StatusPedido;
+import com.microservico.order.util.StatusPedido;
 import com.microservico.order.repositories.PedidoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -163,7 +164,7 @@ public class PedidoServiceTest {
 
     @Test
     void deveLancarExcecaoQuandoPedidoNaoExistirAoDeletar() {
-        Long pedidoId = 99L;
+        long pedidoId = 99L;
 
         when(pedidoRepository.findById(pedidoId)).thenReturn(Optional.empty());
 
@@ -177,7 +178,7 @@ public class PedidoServiceTest {
                 produtoId,
                 "Pastel de queijo",
                 2,
-                14.0
+                BigDecimal.valueOf(14)
         );
 
         PedidoStatusEvent event = new PedidoStatusEvent();
@@ -199,7 +200,7 @@ public class PedidoServiceTest {
         pedido.setClienteId(clienteId);
         pedido.setRestauranteId(restauranteId);
 
-        ItemPedido item = new ItemPedido(1L, pedido, produtoId, "Pastel de queijo", 14.0, 2);
+        ItemPedido item = new ItemPedido(1L, pedido, produtoId, "Pastel de queijo", BigDecimal.valueOf(14), 2);
 
         pedido.setItens(List.of(item));
         pedido.setDataCriacao(LocalDateTime.now());
@@ -221,7 +222,7 @@ public class PedidoServiceTest {
         itemPedido.setPedido(pedido);
         itemPedido.setProdutoId(produtoId);
         itemPedido.setNomeProduto("Pastel de queijo");
-        itemPedido.setPrecoUnitario(14.0);
+        itemPedido.setPrecoUnitario(BigDecimal.valueOf(14));
         itemPedido.setQuantidade(1);
 
         pedido.setId(pedidoId);

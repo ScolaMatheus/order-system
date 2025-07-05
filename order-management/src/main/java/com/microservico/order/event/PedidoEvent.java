@@ -1,7 +1,7 @@
 package com.microservico.order.event;
 
 
-import com.microservico.order.model.StatusPedido;
+import com.microservico.order.util.StatusPedido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

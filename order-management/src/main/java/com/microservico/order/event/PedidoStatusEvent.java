@@ -4,6 +4,7 @@ import com.microservico.order.model.ItemPedido;
 import com.microservico.order.model.Pedido;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @ToString(callSuper = true)
 public class PedidoStatusEvent extends PedidoEvent{
     private List<ItemPedidoEvent> itens;
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
     public PedidoStatusEvent(Pedido pedido)  {
         super(pedido.getId(), pedido.getRestauranteId(), pedido.getClienteId(), pedido.getStatusPedido(),LocalDateTime.now());
@@ -29,7 +30,7 @@ public class PedidoStatusEvent extends PedidoEvent{
         private Long produtoId;
         private String nomeProduto;
         private Integer quantidade;
-        private Double precoUnitario;
+        private BigDecimal precoUnitario;
 
         public ItemPedidoEvent(ItemPedido itemPedido) {
             this.produtoId = itemPedido.getProdutoId();

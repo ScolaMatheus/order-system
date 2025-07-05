@@ -1,9 +1,10 @@
 package com.microservico.order.dto.response;
 
-import com.microservico.order.model.StatusPedido;
+import com.microservico.order.util.StatusPedido;
 import lombok.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,6 +26,6 @@ public class PedidoDtoResponse implements Serializable {
 
     private StatusPedido status;
 
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
 }

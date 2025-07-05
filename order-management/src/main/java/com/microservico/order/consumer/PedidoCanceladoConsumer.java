@@ -1,7 +1,7 @@
 package com.microservico.order.consumer;
 
 import com.microservico.order.event.PedidoCanceladoEvent;
-import com.microservico.order.model.StatusPedido;
+import com.microservico.order.util.StatusPedido;
 import com.microservico.order.service.PedidoService;
 import com.microservico.order.util.RabbitUtil;
 import lombok.RequiredArgsConstructor;
