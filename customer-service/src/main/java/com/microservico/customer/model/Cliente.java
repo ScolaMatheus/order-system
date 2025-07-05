@@ -22,10 +22,10 @@ public class Cliente {
     private String nome;
 
     @Pattern(regexp = "\\d{11}", message = "CPF deve conter 11 dígitos numéricos")
-    @Column(unique = true, nullable = false)
+    @Column(length = 11, unique = true, nullable = false)
     private String cpf;
 
-    @Column(nullable = false)
+    @Column(length = 15, nullable = false)
     private String telefone;
 
     @Column(unique = true, nullable = false)
