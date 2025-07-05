@@ -3,6 +3,7 @@ package com.microservico.customer.event;
 import com.microservico.customer.model.ItemPedido;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -12,7 +13,7 @@ import java.util.List;
 @ToString(callSuper = true)
 public class PedidoStatusEvent extends PedidoEvent {
     private List<ItemPedidoEvent> itens;
-    private Double valorTotal;
+    private BigDecimal valorTotal;
 
     @Data
     @AllArgsConstructor
@@ -21,7 +22,7 @@ public class PedidoStatusEvent extends PedidoEvent {
         private Long produtoId;
         private String nomeProduto;
         private Integer quantidade;
-        private Double precoUnitario;
+        private BigDecimal precoUnitario;
 
         public ItemPedidoEvent(ItemPedido itemPedido) {
             this.produtoId = itemPedido.getProdutoId();

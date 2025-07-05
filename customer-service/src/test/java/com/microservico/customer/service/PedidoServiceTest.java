@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public class PedidoServiceTest {
         PedidoDtoRequest request = new PedidoDtoRequest(
                 1L,
                 1L,
-                List.of(new ItemPedidoDtoRequest(100L, "Pastel de queijo", 2, 14.0))
+                List.of(new ItemPedidoDtoRequest(100L, "Pastel de queijo", 2, BigDecimal.valueOf(14.0)))
         );
 
         Pedido pedidoSalvo = getPedido(pedidoId,clienteId, restauranteId, StatusPedido.CRIADO);
@@ -79,7 +80,7 @@ public class PedidoServiceTest {
         PedidoDtoRequest request = new PedidoDtoRequest(
                 clienteIdInexistente,
                 1L,
-                List.of(new ItemPedidoDtoRequest(100L, "Pastel de queijo", 2, 14.0))
+                List.of(new ItemPedidoDtoRequest(100L, "Pastel de queijo", 2, BigDecimal.valueOf(14.0)))
         );
 
         // Simula o comportamento do clienteService para lançar exceção
@@ -247,7 +248,7 @@ public class PedidoServiceTest {
         itemPedido.setPedido(pedido);
         itemPedido.setProdutoId(produtoId);
         itemPedido.setNomeProduto("Pastel de queijo");
-        itemPedido.setPrecoUnitario(14.0);
+        itemPedido.setPrecoUnitario(BigDecimal.valueOf(14.0));
         itemPedido.setQuantidade(1);
 
         pedido.setId(pedidoId);

@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @EqualsAndHashCode
@@ -25,5 +27,5 @@ public class ItemPedidoDtoRequest {
 
     @NotNull(message = "Preço unitário é obrigatório")
     @Positive(message = "Preço deve ser maior que zero")
-    private Double precoUnitario;
+    private BigDecimal precoUnitario;
 }

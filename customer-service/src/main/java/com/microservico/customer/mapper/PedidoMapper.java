@@ -9,6 +9,7 @@ import com.microservico.customer.model.Pedido;
 import com.microservico.customer.util.StatusPedido;
 import lombok.extern.slf4j.Slf4j;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class PedidoMapper {
 
         pedido.setItens(itens);
 
-        Double vlTotalPedido = itens.stream().mapToDouble(ItemPedido::getValorTotal).sum();
+        BigDecimal vlTotalPedido = itens.stream().map(ItemPedido::getValorTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
 
         pedido.setValorTotal(vlTotalPedido);
 
