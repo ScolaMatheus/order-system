@@ -3,6 +3,8 @@ package com.microservico.restaurant.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,13 +28,13 @@ public class ItemPedido {
     @Column(nullable = false)
     private String nomeProduto;
 
-    @Column(nullable = false)
-    private Double precoUnitario;
+    @Column(precision = 10, scale = 2, nullable = false)
+    private BigDecimal precoUnitario;
 
     @Column(nullable = false)
     private Integer quantidade;
 
-    public Double getValorTotal() {
-        return this.precoUnitario * this.quantidade;
-    }
-}
+    public BigDecimal getValorTotal() {
+        if (precoUnitario == null || quantidade == null) return BigDecimal.ZERO;
+        return precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+    }}

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +17,7 @@ public class MenuItemRequestDTO {
 
     @NotNull
     @Min(0)
-    private Double preco;
+    private BigDecimal preco;
 
     @NotNull
     private Long restaurantId;

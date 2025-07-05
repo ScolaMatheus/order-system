@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,7 +63,7 @@ public class MenuItemServiceTest {
         MenuItem capturado = itemArgumentCaptor.getValue();
 
         assertThat(capturado.getNome()).isEqualTo("Pastel de queijo");
-        assertThat(capturado.getPreco()).isEqualTo(14.0);
+        assertThat(capturado.getPreco()).isEqualTo(BigDecimal.valueOf(14.0));
         assertThat(capturado.getRestaurant()).isEqualTo(restaurant);
 
         assertThat(responseDTO.getId()).isEqualTo(itemId);
@@ -103,7 +104,7 @@ public class MenuItemServiceTest {
 
         assertThat(response.getId()).isEqualTo(itemId);
         assertThat(response.getNome()).isEqualTo("Pastel de queijo");
-        assertThat(response.getPreco()).isEqualTo(14.0);
+        assertThat(response.getPreco()).isEqualTo(BigDecimal.valueOf(14.0));
     }
 
     @Test
@@ -128,13 +129,13 @@ public class MenuItemServiceTest {
         when(menuItemRepository.findById(itemId)).thenReturn(Optional.of(itemExistente));
         when(restaurantRepository.findById(novoRestauranteId)).thenReturn(Optional.of(novoRestaurante));
 
-        MenuItemRequestDTO dto = new MenuItemRequestDTO("Coxinha Vegana", 12.0, novoRestauranteId, true);
+        MenuItemRequestDTO dto = new MenuItemRequestDTO("Coxinha Vegana", BigDecimal.valueOf(12), novoRestauranteId, true);
 
         MenuItemResponseDTO resultado = menuItemService.atualizar(dto, itemId);
 
         verify(menuItemRepository).save(itemExistente);
         assertThat(resultado.getNome()).isEqualTo("Coxinha Vegana");
-        assertThat(resultado.getPreco()).isEqualTo(12.0);
+        assertThat(resultado.getPreco()).isEqualTo(BigDecimal.valueOf(12));
         assertThat(resultado.getAtivo()).isTrue();
         assertThat(resultado.getRestaurantId()).isEqualTo(novoRestauranteId);
     }
@@ -149,14 +150,14 @@ public class MenuItemServiceTest {
         when(menuItemRepository.findById(itemId)).thenReturn(Optional.of(item));
 
         MenuItemRequestDTO dto = new MenuItemRequestDTO(
-                "Nova Coxinha", 9.5, null, null
+                "Nova Coxinha", BigDecimal.valueOf(9.5), null, null
         );
 
         MenuItemResponseDTO resultado = menuItemService.atualizar(dto, itemId);
 
         verify(menuItemRepository).save(item);
         assertThat(resultado.getNome()).isEqualTo("Nova Coxinha");
-        assertThat(resultado.getPreco()).isEqualTo(9.5);
+        assertThat(resultado.getPreco()).isEqualTo(BigDecimal.valueOf(9.5));
         assertThat(resultado.getAtivo()).isEqualTo(item.getAtivo());
         assertThat(resultado.getRestaurantId()).isEqualTo(item.getRestaurant().getId());
     }
@@ -206,7 +207,7 @@ public class MenuItemServiceTest {
 
         menuItem.setId(itemId);
         menuItem.setNome("Pastel de queijo");
-        menuItem.setPreco(14.0);
+        menuItem.setPreco(BigDecimal.valueOf(14.0));
         menuItem.setRestaurant(restaurant);
         menuItem.setAtivo(true);
 

@@ -2,6 +2,8 @@ package com.microservico.restaurant.dto.response;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,6 +13,6 @@ public class ItemPedidoDtoResponse {
     private Long id;
     private Long produtoId;
     private String nomeProduto;
-    private Double precoUnitario;
+    private BigDecimal precoUnitario;
     private int quantidade;
 }

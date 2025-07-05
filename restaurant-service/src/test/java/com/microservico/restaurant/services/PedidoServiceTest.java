@@ -29,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +79,7 @@ public class PedidoServiceTest {
         MenuItem item = new MenuItem();
         item.setId(produtoId);
         item.setNome("Pizza");
-        item.setPreco(14.0);
+        item.setPreco(BigDecimal.valueOf(14));
         item.setAtivo(true);
         when(menuItemRepository.findById(produtoId)).thenReturn(Optional.of(item));
 
@@ -129,8 +130,8 @@ public class PedidoServiceTest {
         Long produtoValido = 100L;
         Long produtoInvalido = 200L;
 
-        PedidoStatusEvent.ItemPedidoEvent item1 = new PedidoStatusEvent.ItemPedidoEvent(produtoValido, "Pizza", 1, 20.0);
-        PedidoStatusEvent.ItemPedidoEvent item2 = new PedidoStatusEvent.ItemPedidoEvent(produtoInvalido, "Refrigerante", 1, 5.0);
+        PedidoStatusEvent.ItemPedidoEvent item1 = new PedidoStatusEvent.ItemPedidoEvent(produtoValido, "Pizza", 1, BigDecimal.valueOf(20.0));
+        PedidoStatusEvent.ItemPedidoEvent item2 = new PedidoStatusEvent.ItemPedidoEvent(produtoInvalido, "Refrigerante", 1, BigDecimal.valueOf(5.0));
 
         PedidoStatusEvent event = new PedidoStatusEvent();
         event.setPedidoId(pedidoId);
@@ -251,7 +252,7 @@ public class PedidoServiceTest {
         itemPedido.setPedido(pedido);
         itemPedido.setProdutoId(produtoId);
         itemPedido.setNomeProduto("Pastel de queijo");
-        itemPedido.setPrecoUnitario(14.0);
+        itemPedido.setPrecoUnitario(BigDecimal.valueOf(14.0));
         itemPedido.setQuantidade(1);
 
         pedido.setId(pedidoId);
@@ -268,7 +269,7 @@ public class PedidoServiceTest {
                 produtoId,
                 "Pastel de queijo",
                 2,
-                14.0
+                BigDecimal.valueOf(14.0)
         );
 
         PedidoStatusEvent event = new PedidoStatusEvent();

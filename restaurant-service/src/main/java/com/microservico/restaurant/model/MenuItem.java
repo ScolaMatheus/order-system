@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "tb_menu_item")
 @Data
@@ -21,8 +23,8 @@ public class MenuItem {
     @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
-    private Double preco;
+    @Column(precision = 10, scale = 2, nullable = false)
+    private BigDecimal preco;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "restaurant_id")
