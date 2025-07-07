@@ -66,8 +66,8 @@ public class MenuItemServiceTest {
         assertThat(capturado.getPreco()).isEqualTo(BigDecimal.valueOf(14.0));
         assertThat(capturado.getRestaurant()).isEqualTo(restaurant);
 
-        assertThat(responseDTO.getId()).isEqualTo(itemId);
-        assertThat(responseDTO.getNome()).isEqualTo("Pastel de queijo");
+        assertThat(responseDTO.id()).isEqualTo(itemId);
+        assertThat(responseDTO.nome()).isEqualTo("Pastel de queijo");
 
     }
 
@@ -86,8 +86,8 @@ public class MenuItemServiceTest {
 
         verify(menuItemRepository).findByRestaurantId(restaurantId);
         assertThat(cardapio).hasSize(1);
-        assertThat(cardapio.get(0).getId()).isEqualTo(itemId);
-        assertThat(cardapio.get(0).getNome()).isEqualTo("Pastel de queijo");
+        assertThat(cardapio.get(0).id()).isEqualTo(itemId);
+        assertThat(cardapio.get(0).nome()).isEqualTo("Pastel de queijo");
 
     }
 
@@ -102,9 +102,9 @@ public class MenuItemServiceTest {
 
         MenuItemResponseDTO response = menuItemService.buscarPorId(itemId);
 
-        assertThat(response.getId()).isEqualTo(itemId);
-        assertThat(response.getNome()).isEqualTo("Pastel de queijo");
-        assertThat(response.getPreco()).isEqualTo(BigDecimal.valueOf(14.0));
+        assertThat(response.id()).isEqualTo(itemId);
+        assertThat(response.nome()).isEqualTo("Pastel de queijo");
+        assertThat(response.preco()).isEqualTo(BigDecimal.valueOf(14.0));
     }
 
     @Test
@@ -134,10 +134,10 @@ public class MenuItemServiceTest {
         MenuItemResponseDTO resultado = menuItemService.atualizar(dto, itemId);
 
         verify(menuItemRepository).save(itemExistente);
-        assertThat(resultado.getNome()).isEqualTo("Coxinha Vegana");
-        assertThat(resultado.getPreco()).isEqualTo(BigDecimal.valueOf(12));
-        assertThat(resultado.getAtivo()).isTrue();
-        assertThat(resultado.getRestaurantId()).isEqualTo(novoRestauranteId);
+        assertThat(resultado.nome()).isEqualTo("Coxinha Vegana");
+        assertThat(resultado.preco()).isEqualTo(BigDecimal.valueOf(12));
+        assertThat(resultado.ativo()).isTrue();
+        assertThat(resultado.restaurantId()).isEqualTo(novoRestauranteId);
     }
 
     @Test
@@ -156,10 +156,10 @@ public class MenuItemServiceTest {
         MenuItemResponseDTO resultado = menuItemService.atualizar(dto, itemId);
 
         verify(menuItemRepository).save(item);
-        assertThat(resultado.getNome()).isEqualTo("Nova Coxinha");
-        assertThat(resultado.getPreco()).isEqualTo(BigDecimal.valueOf(9.5));
-        assertThat(resultado.getAtivo()).isEqualTo(item.getAtivo());
-        assertThat(resultado.getRestaurantId()).isEqualTo(item.getRestaurant().getId());
+        assertThat(resultado.nome()).isEqualTo("Nova Coxinha");
+        assertThat(resultado.preco()).isEqualTo(BigDecimal.valueOf(9.5));
+        assertThat(resultado.ativo()).isEqualTo(item.getAtivo());
+        assertThat(resultado.restaurantId()).isEqualTo(item.getRestaurant().getId());
     }
 
     @Test

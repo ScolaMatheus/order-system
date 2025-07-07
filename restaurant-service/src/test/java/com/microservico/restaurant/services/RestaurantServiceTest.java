@@ -57,8 +57,8 @@ public class RestaurantServiceTest {
         assertThat(restaurantCapturado.getEndereco()).isEqualTo("Avenida Brasil, 545");
         assertThat(restaurantCapturado.getAtivo()).isTrue();
 
-        assertThat(responseDTO.getId()).isEqualTo(1L);
-        assertThat(responseDTO.getNome()).isEqualTo("Casa das Esfihas");
+        assertThat(responseDTO.id()).isEqualTo(1L);
+        assertThat(responseDTO.nome()).isEqualTo("Casa das Esfihas");
 
     }
 
@@ -71,8 +71,8 @@ public class RestaurantServiceTest {
 
         verify(restaurantRepository).findAll();
         assertThat(resultado).hasSize(2);
-        assertThat(resultado.get(0).getNome()).isEqualTo("Casa das Esfihas");
-        assertThat(resultado.get(1).getNome()).isEqualTo("Pizza Legal");
+        assertThat(resultado.get(0).nome()).isEqualTo("Casa das Esfihas");
+        assertThat(resultado.get(1).nome()).isEqualTo("Pizza Legal");
     }
 
     @Test
@@ -85,9 +85,9 @@ public class RestaurantServiceTest {
 
         RestaurantResponseDTO responseDTO = restaurantService.buscarPorId(restauranteId);
 
-        assertThat(responseDTO.getId()).isEqualTo(restauranteId);
-        assertThat(responseDTO.getNome()).isEqualTo("Casa dos Salgados");
-        assertThat(responseDTO.getEndereco()).isEqualTo("Av. Cruzeiro do Sul, 123");
+        assertThat(responseDTO.id()).isEqualTo(restauranteId);
+        assertThat(responseDTO.nome()).isEqualTo("Casa dos Salgados");
+        assertThat(responseDTO.endereco()).isEqualTo("Av. Cruzeiro do Sul, 123");
     }
 
     @Test
@@ -119,9 +119,9 @@ public class RestaurantServiceTest {
         RestaurantResponseDTO response = restaurantService.atualizar(dto, id);
 
         verify(restaurantRepository).save(restauranteExistente);
-        assertThat(response.getNome()).isEqualTo("Novo Nome");
-        assertThat(response.getEndereco()).isEqualTo("Novo Endereço");
-        assertThat(response.getAtivo()).isTrue();
+        assertThat(response.nome()).isEqualTo("Novo Nome");
+        assertThat(response.endereco()).isEqualTo("Novo Endereço");
+        assertThat(response.ativo()).isTrue();
     }
 
     @Test

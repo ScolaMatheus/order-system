@@ -1,15 +1,6 @@
 package com.microservico.restaurant.dto.response;
 
-import lombok.*;
-
 import java.math.BigDecimal;
 
-@Data
-public class MenuItemResponseDTO {
-    private Long id;
-    private String nome;
-    private BigDecimal preco;
-    private Long restaurantId;
-    private Boolean ativo;
-
+public record MenuItemResponseDTO (Long id, String nome, BigDecimal preco, Long restaurantId, Boolean ativo) {
 }

@@ -17,13 +17,11 @@ public class RestaurantMapper {
     }
 
     public static RestaurantResponseDTO toDto(Restaurant restaurant) {
-        RestaurantResponseDTO dto = new RestaurantResponseDTO();
-
-        dto.setId(restaurant.getId());
-        dto.setNome(restaurant.getNome());
-        dto.setEndereco(restaurant.getEndereco());
-        dto.setAtivo(restaurant.getAtivo());
-
-        return dto;
+        return new RestaurantResponseDTO(
+                restaurant.getId(),
+                restaurant.getNome(),
+                restaurant.getEndereco(),
+                restaurant.getAtivo()
+        );
     }
 }

@@ -212,7 +212,7 @@ public class PedidoServiceTest {
         List<PedidoDtoResponse> pedidos = pedidoService.buscarPedidoPorRestaurante(restauranteId);
 
         assertThat(pedidos).hasSize(1);
-        assertThat(pedidos.get(0).getRestaurantId()).isEqualTo(restauranteId);
+        assertThat(pedidos.get(0).restaurantId()).isEqualTo(restauranteId);
     }
 
     @Test

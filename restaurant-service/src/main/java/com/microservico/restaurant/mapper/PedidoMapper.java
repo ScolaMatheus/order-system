@@ -60,16 +60,14 @@ public class PedidoMapper {
     }
 
     public static PedidoDtoResponse toDto(Pedido pedido) {
-        PedidoDtoResponse dtoResponse = new PedidoDtoResponse();
-
-        dtoResponse.setId(pedido.getId());
-        dtoResponse.setClienteId(pedido.getClienteId());
-        dtoResponse.setRestaurantId(pedido.getRestauranteId());
-        dtoResponse.setItens(pedido.getItens().stream().map(ItemPedidoMapper::toDto).toList());
-        dtoResponse.setDataCriacao(pedido.getDataCriacao());
-        dtoResponse.setStatus(pedido.getStatusPedido());
-        dtoResponse.setValorTotal(pedido.getValorTotal());
-
-        return dtoResponse;
+        return new PedidoDtoResponse(
+                pedido.getId(),
+                pedido.getClienteId(),
+                pedido.getRestauranteId(),
+                pedido.getItens().stream().map(ItemPedidoMapper::toDto).toList(),
+                pedido.getDataCriacao(),
+                pedido.getStatusPedido(),
+                pedido.getValorTotal()
+        );
     }
 }

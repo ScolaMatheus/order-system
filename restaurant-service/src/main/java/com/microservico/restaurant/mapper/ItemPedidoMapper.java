@@ -7,15 +7,12 @@ import com.microservico.restaurant.model.ItemPedido;
 public class ItemPedidoMapper {
 
     public static ItemPedidoDtoResponse toDto(ItemPedido itemPedido) {
-        ItemPedidoDtoResponse itensDto = new ItemPedidoDtoResponse();
-
-        itensDto.setId(itemPedido.getId());
-        itensDto.setProdutoId(itemPedido.getProdutoId());
-        itensDto.setNomeProduto(itemPedido.getNomeProduto());
-        itensDto.setPrecoUnitario(itemPedido.getPrecoUnitario());
-        itensDto.setQuantidade(itemPedido.getQuantidade());
-
-        return itensDto;
-
+        return new ItemPedidoDtoResponse(
+                itemPedido.getId(),
+                itemPedido.getProdutoId(),
+                itemPedido.getNomeProduto(),
+                itemPedido.getPrecoUnitario(),
+                itemPedido.getQuantidade()
+        );
     }
 }

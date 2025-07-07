@@ -19,15 +19,12 @@ public class MenuItemMapper {
     }
 
     public static MenuItemResponseDTO toDto(MenuItem menuItem) {
-        MenuItemResponseDTO dto = new MenuItemResponseDTO();
-
-        dto.setId(menuItem.getId());
-        dto.setNome(menuItem.getNome());
-        dto.setPreco(menuItem.getPreco());
-        dto.setRestaurantId(menuItem.getRestaurant().getId());
-        dto.setAtivo(menuItem.getAtivo());
-
-        return dto;
+        return new MenuItemResponseDTO(
+                menuItem.getId(),
+                menuItem.getNome(),
+                menuItem.getPreco(),
+                menuItem.getRestaurant().getId(),
+                menuItem.getAtivo()
+        );
     }
-
 }
