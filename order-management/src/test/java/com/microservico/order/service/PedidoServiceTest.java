@@ -68,10 +68,10 @@ public class PedidoServiceTest {
 
         verify(pedidoRepository).findAll();
         assertThat(resultado).hasSize(1);
-        assertThat(resultado.get(0).getClienteId()).isEqualTo(1L);
-        assertThat(resultado.get(0).getItens()).hasSize(1);
-        assertThat(resultado.get(0).getValorTotal()).isEqualTo(mockList.get(0).getItens().get(0).getValorTotal());
-        assertThat(resultado.get(0).getStatus()).isEqualTo(StatusPedido.CRIADO);
+        assertThat(resultado.get(0).clienteId()).isEqualTo(1L);
+        assertThat(resultado.get(0).itens()).hasSize(1);
+        assertThat(resultado.get(0).valorTotal()).isEqualTo(mockList.get(0).getItens().get(0).getValorTotal());
+        assertThat(resultado.get(0).status()).isEqualTo(StatusPedido.CRIADO);
 
     }
 
@@ -87,9 +87,9 @@ public class PedidoServiceTest {
 
         PedidoDtoResponse responseDto = pedidoService.buscarPedidoPorId(pedidoId);
 
-        assertThat(responseDto.getId()).isEqualTo(pedidoId);
-        assertThat(responseDto.getValorTotal()).isEqualTo(pedido.getValorTotal());
-        assertThat(responseDto.getItens()).hasSize(1);
+        assertThat(responseDto.id()).isEqualTo(pedidoId);
+        assertThat(responseDto.valorTotal()).isEqualTo(pedido.getValorTotal());
+        assertThat(responseDto.itens()).hasSize(1);
     }
 
     @Test

@@ -12,16 +12,15 @@ import java.util.List;
 public class PedidoMapper {
 
     public static PedidoDtoResponse toDto(Pedido pedido) {
-        PedidoDtoResponse pedidoDtoResponse = new PedidoDtoResponse();
-
-        pedidoDtoResponse.setId(pedido.getId());
-        pedidoDtoResponse.setClienteId(pedido.getClienteId());
-        pedidoDtoResponse.setItens(pedido.getItens().stream().map(ItemPedidoMapper::toDto).toList());
-        pedidoDtoResponse.setDataCriacao(pedido.getDataCriacao());
-        pedidoDtoResponse.setStatus(pedido.getStatusPedido());
-        pedidoDtoResponse.setValorTotal(pedido.getValorTotal());
-
-        return pedidoDtoResponse;
+        return new PedidoDtoResponse(
+        pedido.getId(),
+        pedido.getClienteId(),
+        pedido.getItens().stream().map(ItemPedidoMapper::toDto).toList(),
+        pedido.getDataCriacao(),
+        pedido.getDataAtualizacao(),
+        pedido.getStatusPedido(),
+        pedido.getValorTotal()
+        );
     }
 
     public static Pedido eventToEntity(PedidoStatusEvent event) {
