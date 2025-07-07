@@ -1,44 +1,50 @@
 # 🧾 Order System - Microserviços com Spring Boot, RabbitMQ e PostgreSQL
 
-Este projeto é um sistema gerenciador de pedidos distribuído, baseado em **microserviços** utilizando **Spring Boot**, comunicação via **RabbitMQ**, persistência em **PostgreSQL** e documentação com **Swagger**.
+Este projeto é um sistema distribuído de **gestão de pedidos**, desenvolvido com foco em arquitetura de **microserviços**, utilizando:
+
+- **Spring Boot**
+- **RabbitMQ** para comunicação assíncrona
+- **PostgreSQL** para persistência
+- **Swagger** para documentação das APIs
+- **Docker Compose** para orquestração
 
 ---
 ### 🧭 Fluxo de Eventosta
 
-- Cliente → `customer-service`: `POST /api/pedidos`
-- `customer-service` → Exchange: `pedido.status.criado`
-- Consumidores:
-   - `order-management`: salva pedido
-   - `restaurant-service`: valida pedido
-      - Se válido → `pedido.status.preparando`
-      - Se inválido → `pedido.status.cancelado`
-- Todos escutam os eventos `preparando`/`cancelado`
-- Quando o preparo do pedido for concluído:
-   - `restaurant-service` chama endpoint `POST /pedidos/{id}/em-rota`
-   - Publica `pedido.status.em-rota`
-   - Aplicações envolvidas atualizam status conforme evento
-- Quando o pedido for entregue:
-   - `customer-service` chama endpoint `PATCH /clientes/pedidos/{id}/entrega`
-   - Publica `pedido.status.entregue`
-   - Aplicações envolvidas atualizam status conforme evento
+1. O cliente realiza um pedido via `customer-service`:
+    - `POST /api/pedidos`
+2. O serviço publica o evento `pedido.status.criado`
+3. Esse evento é consumido por:
+    - `order-management`: persiste o pedido
+    - `restaurant-service`: valida os itens e responde com:
+        - `pedido.status.preparando` (sucesso)
+        - `pedido.status.cancelado` (falha)
+4. Todos os serviços consomem os eventos e atualizam seus estados
+5. Quando o restaurante finaliza a preparação:
+    - Chama `POST /pedidos/{id}/em-rota`
+    - Publica o evento `pedido.status.em-rota`
+6. Quando o pedido é entregue:
+    - `customer-service` chama `PATCH /clientes/pedidos/{id}/entrega`
+    - Evento `pedido.status.entregue` é disparado
+
 ---
 
 ## 📦 Microserviços
 
 ### 1. customer-service
 - CRUD de clientes
-- Envia pedidos via evento
-- Consome eventos de atualização de status
-- Informa pedido entregue
+- Criação de pedidos
+- Consome eventos de status
+- Publica evento de entrega
 
 ### 2. order-management
-- Gerencia e persiste pedidos
-- Atualiza status com base nos eventos recebidos
+- Persistência e gestão de pedidos
+- Atualização de status via eventos
 
 ### 3. restaurant-service
-- Gerencia restaurantes e itens
-- Valida pedidos e responde via evento
-- Informa quando pedido estiver em rota de entrega
+- CRUD de restaurantes e itens do cardápio
+- Validação de pedidos
+- Geração de eventos `preparando`, `cancelado` e `em-rota`
 
 ---
 
@@ -55,26 +61,19 @@ Este projeto é um sistema gerenciador de pedidos distribuído, baseado em **mic
 
 ---
 
-## 📦 Execução do projeto
+## 🚀 Como executar o projeto
 
-Requisitos:
-- Java 17+
-- Maven
-- Docker
+### ✅ Requisitos
 
-### 1. Subir os containers com Docker Compose
+- Docker + Docker Compose
+
+### ▶️ Subindo tudo com Docker Compose
+
 ```bash
 docker-compose up -d
 ```
 
-### 2. ‘Build’ e execução de cada serviço
-```bash
-cd customer-service
-./mvnw clean install
-java -jar target/customer-service.jar
-```
-
-Repita para os outros serviços (`order-management`, `restaurant-service`).
+Os serviços serão inicializados automaticamente com as imagens públicas do Docker Hub.
 
 ---
 
@@ -84,27 +83,30 @@ Repita para os outros serviços (`order-management`, `restaurant-service`).
 - order-management: `http://localhost:8082/swagger-ui.html`
 - restaurant-service: `http://localhost:8083/swagger-ui.html`
 
+> Obs: as portas podem ser ajustadas no `docker-compose.yml`.
+
 ---
 
 ## 🔁 Comunicação via eventos
 
-| Evento                        | Emissor             | Consumidor(es)                           |
-|------------------------------|---------------------|------------------------------------------|
-| `pedido.status.criado`       | customer-service    | order-management, restaurant-service     |
-| `pedido.status.preparando`   | restaurant-service  | customer-service, order-management       |
-| `pedido.status.cancelado`    | restaurant-service  | customer-service, order-management       |
-| `pedido.status.em-rota`      | restaurant-service  | customer-service, order-management       |
-| `pedido.status.entregue`     | customer-service    | restaurant-service, order-management       |
+| Evento                        | Emissor             | Consumidores                         |
+|------------------------------|---------------------|--------------------------------------|
+| `pedido.status.criado`       | customer-service    | order-management, restaurant-service |
+| `pedido.status.preparando`   | restaurant-service  | customer-service, order-management   |
+| `pedido.status.cancelado`    | restaurant-service  | customer-service, order-management   |
+| `pedido.status.em-rota`      | restaurant-service  | customer-service, order-management   |
+| `pedido.status.entregue`     | customer-service    | restaurant-service, order-management |
 
 ---
 
 ## 🛡️ Boas práticas aplicadas
 
-- Separação de responsabilidades por microsserviço
-- Comunicação assíncrona orientada a eventos
-- Tratamento de exceções centralizado
-- Testes unitários por serviço
-- Swagger para documentação de APIs
+- Arquitetura baseada em eventos (event-driven)
+- Separação clara de domínios por microsserviço
+- Tolerância a falhas com `depends_on + healthcheck`
+- Dockerização com imagens públicas e plug-and-play
+- Swagger para documentação de cada API
+- Testes unitários por contexto de serviço
 ---
 
 ## 🧑‍💻 Autor
