@@ -29,10 +29,10 @@ jobs:
           - 5432:5432
         # Health check para garantir que o banco está pronto
         options: >-
-          -health-cmd pg_isready
-          -health-interval 10s
-          -health-timeout 5s
-          -health-retries 5
+          --health-cmd "pg_isready --username=restaurantuser --dbname=restaurantdb"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
       rabbitmq:
         image: rabbitmq:3.9-management
