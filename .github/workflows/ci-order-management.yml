@@ -1,19 +1,19 @@
-# .GitHub/workflows/ci-customer.yml
-name: CI - Customer Service
+# .GitHub/workflows/ci-order-management.yml
+name: CI - Order Management Service
 
-# Gatilhos: Roda em push/PR para main, mas só se houver mudanças na pasta do customer-service
+# Gatilhos: Roda em push/PR para main, mas só se houver mudanças na pasta do order-management
 on:
   push:
     branches: ["main"]
     paths:
-      - 'customer-service/**'
+      - 'order-management/**'
   pull_request:
     branches: ["main"]
     paths:
-      - 'customer-service/**'
+      - 'order-management/**'
 
 jobs:
-  build-and-test-customer:
+  build-and-test-order:
     runs-on: ubuntu-latest
 
     # Inicia containers do Postgres e RabbitMq para os testes de integração
@@ -22,13 +22,12 @@ jobs:
         image: postgres:14.5
         # Variáveis de ambiente para criar o banco de dados de teste
         env:
-          POSTGRES_USER: customeruser
-          POSTGRES_PASSWORD: customerpass
-          POSTGRES_DB: customerdb
-
+          POSTGRES_USER: orderuser
+          POSTGRES_PASSWORD: orderpass
+          POSTGRES_DB: orderdb
         ports:
           - 5432:5432
-        # ‘Health’ check para garantir que o banco está pronto antes dos testes
+        # Health check para garantir que o banco está pronto
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -46,7 +45,7 @@ jobs:
     steps:
       # 1. Faz o checkout do código
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkou@v4
       # 2. Configura o JDK 17 com cache do Maven
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -54,16 +53,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: 'maven'
-      # 3. Compila, testa e empacota o projeto com Maven
+      #3. Compila, testa e empacota o projeto com Mavem
       - name: Build and Test with Maven
-        # Define o diretório de trabalho para o microserviço do customer
-        working-directory: ./customer-service
+        # Define o diretório de trabalho para o microsserviço do order
+        working-directory: ./order-management
         env:
-          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/customerdb
-          SPRING_DATASOURCE_USERNAME: customeruser
-          SPRING_DATASOURCE_PASSWORD: customerpass
+          SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/orderdb
+          SPRING_DATASOURCE_USERNAME: orderuser
+          SPRING_DATASOURCE_PASSWORD: orderpass
           SPRING_RABBITMQ_HOST: localhost
           SPRING_RABBITMQ_PORT: 5672
           SPRING_RABBITMQ_USERNAME: orderSystemUser
           SPRING_RABBITMQ_PASSWORD: orderSystem2925
-        run: mvn -B package --file pom.xml
+        run: mvn - B package --file pom.xml
