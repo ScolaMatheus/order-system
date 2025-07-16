@@ -65,4 +65,4 @@ jobs:
           SPRING_RABBITMQ_PORT: 5672
           SPRING_RABBITMQ_USERNAME: orderSystemUser
           SPRING_RABBITMQ_PASSWORD: orderSystem2925
-        run: mvn - B package --file pom.xml
+        run: mvn -B package --file pom.xml
