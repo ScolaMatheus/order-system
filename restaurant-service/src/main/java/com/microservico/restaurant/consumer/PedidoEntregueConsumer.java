@@ -28,7 +28,7 @@ public class PedidoEntregueConsumer extends RabbitUtil {
             return;
         }
 
-        log.info("Pedido entregue recebido: {}",event);
+        log.info("Pedido entregue recebido: {}", event);
 
         pedidoService.atualizarPedido(event.getPedidoId(), StatusPedido.ENTREGUE, event.getDataHoraAtualizacao());
     }
