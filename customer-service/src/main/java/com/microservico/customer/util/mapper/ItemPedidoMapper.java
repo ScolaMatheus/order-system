@@ -1,7 +1,6 @@
 package com.microservico.customer.util.mapper;
 
 import com.microservico.customer.adapter.outbound.entities.JpaItemPedidoEntity;
-import com.microservico.customer.adapter.outbound.entities.JpaPedidoEntity;
 import com.microservico.customer.dto.request.ItemPedidoDtoRequest;
 import com.microservico.customer.dto.response.ItemPedidoDtoResponse;
 import com.microservico.customer.model.ItemPedido;
