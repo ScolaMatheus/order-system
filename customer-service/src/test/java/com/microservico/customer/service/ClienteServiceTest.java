@@ -1,10 +1,11 @@
 package com.microservico.customer.service;
 
+import com.microservico.customer.application.repository.ClienteRepository;
+import com.microservico.customer.application.services.ClienteService;
 import com.microservico.customer.dto.request.ClienteDtoRequest;
 import com.microservico.customer.dto.response.ClienteDtoResponse;
 import com.microservico.customer.exceptions.RecursoNaoEncontradoException;
 import com.microservico.customer.model.Cliente;
-import com.microservico.customer.repositories.ClienteRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -127,14 +128,15 @@ public class ClienteServiceTest {
     @Test
     void deveExcluirClienteQuandoExistir() {
         // Given
-        Cliente c = getCliente(20L);
-        when(clienteRepository.findById(20L)).thenReturn(Optional.of(c));
+        Long idCliente = 20L;
+        Cliente c = getCliente(idCliente);
+        when(clienteRepository.findById(idCliente)).thenReturn(Optional.of(c));
 
         // When
-        clienteService.excluirCliente(20L);
+        clienteService.excluirCliente(idCliente);
 
         // Then
-        verify(clienteRepository).delete(c);
+        verify(clienteRepository).deleteById(idCliente);
     }
 
     @Test
