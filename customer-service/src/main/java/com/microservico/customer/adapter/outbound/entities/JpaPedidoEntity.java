@@ -50,22 +50,4 @@ public class JpaPedidoEntity {
     @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal valorTotal;
 
-    public BigDecimal getValorTotal() {
-        if (itens == null) return new BigDecimal(0);
-        return itens.stream()
-                .map(JpaItemPedidoEntity::getValorTotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public JpaPedidoEntity(Pedido pedido) {
-        this.id = pedido.getId();
-        this.clienteId = pedido.getClienteId();
-        this.restauranteId = pedido.getRestauranteId();
-        this.itens = pedido.getItens().stream().map(itemPedido -> new JpaItemPedidoEntity(itemPedido.getId(), new JpaPedidoEntity(itemPedido.getPedido()), itemPedido.getProdutoId(), itemPedido.getNomeProduto(), itemPedido.getPrecoUnitario(), itemPedido.getQuantidade())).toList();
-        this.dataCriacao = pedido.getDataCriacao();
-        this.dataAtualizacao = pedido.getDataAtualizacao();
-        this.statusPedido = pedido.getStatusPedido();
-        this.valorTotal = pedido.getValorTotal();
-    }
-
 }
