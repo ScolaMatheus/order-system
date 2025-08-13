@@ -1,15 +1,16 @@
-package com.microservico.customer.service;
+package com.microservico.customer.application.services;
 
+import com.microservico.customer.application.repository.PedidoRepository;
+import com.microservico.customer.application.useCases.PedidoUseCases;
 import com.microservico.customer.dto.request.PedidoDtoRequest;
 import com.microservico.customer.dto.response.PedidoDtoResponse;
 import com.microservico.customer.event.PedidoCanceladoEvent;
 import com.microservico.customer.event.PedidoStatusEvent;
 import com.microservico.customer.exceptions.RecursoNaoEncontradoException;
 import com.microservico.customer.exceptions.StatusIncorretoException;
-import com.microservico.customer.mapper.PedidoMapper;
+import com.microservico.customer.util.mapper.PedidoMapper;
 import com.microservico.customer.model.Pedido;
-import com.microservico.customer.publisher.PedidoEventPublisher;
-import com.microservico.customer.repositories.PedidoRepository;
+import com.microservico.customer.adapter.outbound.publisher.PedidoEventPublisher;
 import com.microservico.customer.util.StatusPedido;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -23,12 +24,13 @@ import static com.microservico.customer.util.OrigemCancelamento.CUSTOMER_SERVICE
 @Service
 @Slf4j
 @AllArgsConstructor
-public class PedidoService {
+public class PedidoService implements PedidoUseCases {
 
     private final PedidoEventPublisher pedidoEventPublisher;
     private final PedidoRepository pedidoRepository;
     private final ClienteService clienteService;
 
+    @Override
     @Transactional
     public PedidoDtoResponse criarPedidoEvent(PedidoDtoRequest request) {
         //Validar se o cliente existe
@@ -50,6 +52,7 @@ public class PedidoService {
         return PedidoMapper.toDto(pedido);
     }
 
+    @Override
     @Transactional
     public PedidoStatusEvent informarPedidoEntregue(Long idPedido) {
         // Buscar pedido.
@@ -73,6 +76,7 @@ public class PedidoService {
         return pedidoEvent;
     }
 
+    @Override
     @Transactional
     public void atualizarPedido(Long idPedido, StatusPedido statusPedido, LocalDateTime dataHoraAtualizacao) {
         Pedido pedido = pedidoRepository.findById(idPedido).orElseThrow(
@@ -91,6 +95,8 @@ public class PedidoService {
         log.info("Pedido {} alterado para status {} às {}",idPedido, statusPedido, dataHoraAtualizacao);
     }
 
+    @Override
+    @Transactional
     public PedidoCanceladoEvent processarCancelamentoDePedido(Long idPedido) {
         Pedido pedido = pedidoRepository.findById(idPedido).orElseThrow(
                 () -> new RecursoNaoEncontradoException("Pedido não encontrado com esse id: " + idPedido));
