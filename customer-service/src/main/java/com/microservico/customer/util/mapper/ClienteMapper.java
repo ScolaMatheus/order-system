@@ -1,6 +1,7 @@
-package com.microservico.customer.mapper;
+package com.microservico.customer.util.mapper;
 
 
+import com.microservico.customer.adapter.outbound.entities.JpaClienteEntity;
 import com.microservico.customer.dto.request.ClienteDtoRequest;
 import com.microservico.customer.dto.response.ClienteDtoResponse;
 import com.microservico.customer.model.Cliente;
@@ -30,4 +31,13 @@ public class ClienteMapper {
         );
     }
 
+    public static Cliente toEntity(JpaClienteEntity clienteEntity) {
+        return new Cliente(
+                clienteEntity.getId(),
+                clienteEntity.getNome(),
+                clienteEntity.getCpf(),
+                clienteEntity.getTelefone(),
+                clienteEntity.getEmail()
+        );
+    }
 }
