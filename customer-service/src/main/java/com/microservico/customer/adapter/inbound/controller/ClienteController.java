@@ -1,4 +1,4 @@
-package com.microservico.customer.controller;
+package com.microservico.customer.adapter.inbound.controller;
 
 
 import com.microservico.customer.dto.request.ClienteDtoRequest;
@@ -7,8 +7,8 @@ import com.microservico.customer.dto.response.ClienteDtoResponse;
 import com.microservico.customer.dto.response.PedidoDtoResponse;
 import com.microservico.customer.event.PedidoCanceladoEvent;
 import com.microservico.customer.event.PedidoStatusEvent;
-import com.microservico.customer.service.ClienteService;
-import com.microservico.customer.service.PedidoService;
+import com.microservico.customer.application.services.ClienteService;
+import com.microservico.customer.application.services.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
