@@ -1,7 +1,8 @@
-package com.microservico.customer.consumer;
+package com.microservico.customer.adapter.inbound.consumer;
 
+import com.microservico.customer.application.consumer.IPedidoCanceladoConsumer;
 import com.microservico.customer.event.PedidoCanceladoEvent;
-import com.microservico.customer.service.PedidoService;
+import com.microservico.customer.application.services.PedidoService;
 import com.microservico.customer.util.RabbitUtil;
 import com.microservico.customer.util.StatusPedido;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,12 @@ import static com.microservico.customer.util.RabbitConstants.PEDIDO_CANCELADO_QU
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PedidoCanceladoConsumer extends RabbitUtil {
+public class PedidoCanceladoConsumer extends RabbitUtil implements IPedidoCanceladoConsumer {
 
     private final PedidoService pedidoService;
 
     @RabbitListener(queues = PEDIDO_CANCELADO_QUEUE)
-    public void consumirPedidoCancelado(PedidoCanceladoEvent event, Message message) {
+    public void lidarComMensagemErroRabbitMq(PedidoCanceladoEvent event, Message message) {
 
         if (event.getOrigemCancelamento().equals(CUSTOMER_SERVICE.toString())) {
             return;
@@ -35,6 +36,12 @@ public class PedidoCanceladoConsumer extends RabbitUtil {
             return;
         }
 
+        this.consumirPedidoCancelado(event);
+
+    }
+
+    @Override
+    public void consumirPedidoCancelado(PedidoCanceladoEvent event) {
         pedidoService.atualizarPedido(event.getPedidoId(), StatusPedido.CANCELADO,event.getDataHoraAtualizacao());
     }
 
