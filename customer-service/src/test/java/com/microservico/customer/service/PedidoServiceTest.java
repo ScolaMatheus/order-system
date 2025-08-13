@@ -1,5 +1,8 @@
 package com.microservico.customer.service;
 
+import com.microservico.customer.application.repository.PedidoRepository;
+import com.microservico.customer.application.services.ClienteService;
+import com.microservico.customer.application.services.PedidoService;
 import com.microservico.customer.dto.request.ItemPedidoDtoRequest;
 import com.microservico.customer.dto.request.PedidoDtoRequest;
 import com.microservico.customer.dto.response.PedidoDtoResponse;
@@ -9,8 +12,7 @@ import com.microservico.customer.exceptions.RecursoNaoEncontradoException;
 import com.microservico.customer.exceptions.StatusIncorretoException;
 import com.microservico.customer.model.ItemPedido;
 import com.microservico.customer.model.Pedido;
-import com.microservico.customer.publisher.PedidoEventPublisher;
-import com.microservico.customer.repositories.PedidoRepository;
+import com.microservico.customer.adapter.outbound.publisher.PedidoEventPublisher;
 import com.microservico.customer.util.StatusPedido;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
