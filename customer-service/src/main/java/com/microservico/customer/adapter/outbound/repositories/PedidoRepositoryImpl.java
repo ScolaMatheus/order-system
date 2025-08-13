@@ -14,10 +14,11 @@ import java.util.Optional;
 public class PedidoRepositoryImpl implements PedidoRepository {
 
     private final JpaPedidoRepository jpaPedidoRepository;
+
     @Override
     public Pedido save(Pedido pedido) {
         JpaPedidoEntity pedidoEntity = PedidoMapper.toJpaEntity(pedido);
-        this.jpaPedidoRepository.save(pedidoEntity);
+        pedidoEntity = this.jpaPedidoRepository.save(pedidoEntity);
         return PedidoMapper.toEntity(pedidoEntity);
     }
 
