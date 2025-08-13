@@ -68,9 +68,12 @@ public class PedidoMapper {
     public static Pedido toEntity(JpaPedidoEntity pedidoEntity) {
         Pedido pedido = new Pedido();
 
+        pedido.setId(pedidoEntity.getId());
         pedido.setClienteId(pedidoEntity.getClienteId());
         pedido.setRestauranteId(pedidoEntity.getRestauranteId());
-        pedido.setStatusPedido(StatusPedido.CRIADO);
+        pedido.setStatusPedido(pedidoEntity.getStatusPedido());
+        pedido.setDataCriacao(pedidoEntity.getDataCriacao());
+        pedido.setDataAtualizacao(pedidoEntity.getDataAtualizacao());
 
         List<ItemPedido> itens = pedidoEntity.getItens()
                 .stream()

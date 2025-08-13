@@ -33,6 +33,7 @@ public class ItemPedidoMapper {
     public static ItemPedido toEntity(JpaItemPedidoEntity jpaItemPedidoEntity, Pedido pedido) {
         ItemPedido itemPedido = new ItemPedido();
 
+        itemPedido.setId(jpaItemPedidoEntity.getId());
         itemPedido.setPedido(pedido);
         itemPedido.setProdutoId(jpaItemPedidoEntity.getProdutoId());
         itemPedido.setNomeProduto(jpaItemPedidoEntity.getNomeProduto());
