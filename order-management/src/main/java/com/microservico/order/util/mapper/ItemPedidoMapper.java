@@ -1,24 +1,12 @@
-package com.microservico.order.mapper;
+package com.microservico.order.util.mapper;
 
-import com.microservico.order.dto.request.ItemPedidoDtoRequest;
+import com.microservico.order.adapter.outbound.entities.JpaItemPedidoEntity;
 import com.microservico.order.dto.response.ItemPedidoDtoResponse;
 import com.microservico.order.event.PedidoStatusEvent;
 import com.microservico.order.model.ItemPedido;
 import com.microservico.order.model.Pedido;
 
 public class ItemPedidoMapper {
-
-    public static ItemPedido toEntity(ItemPedidoDtoRequest dtoRequest, Pedido pedido) {
-        ItemPedido itemPedido = new ItemPedido();
-
-        itemPedido.setPedido(pedido);
-        itemPedido.setProdutoId(dtoRequest.getProdutoId());
-        itemPedido.setNomeProduto(dtoRequest.getNomeProduto());
-        itemPedido.setPrecoUnitario(dtoRequest.getPrecoUnitario());
-        itemPedido.setQuantidade(dtoRequest.getQuantidade());
-
-        return itemPedido;
-    }
 
     public static ItemPedidoDtoResponse toDto(ItemPedido itemPedido) {
         return new ItemPedidoDtoResponse(
@@ -38,6 +26,19 @@ public class ItemPedidoMapper {
         itemPedido.setNomeProduto(itemPedidoEvent.getNomeProduto());
         itemPedido.setPrecoUnitario(itemPedidoEvent.getPrecoUnitario());
         itemPedido.setQuantidade(itemPedidoEvent.getQuantidade());
+
+        return itemPedido;
+    }
+
+    public static ItemPedido toEntity(JpaItemPedidoEntity jpaItemPedidoEntity, Pedido pedido) {
+        ItemPedido itemPedido = new ItemPedido();
+
+        itemPedido.setId(jpaItemPedidoEntity.getId());
+        itemPedido.setPedido(pedido);
+        itemPedido.setProdutoId(jpaItemPedidoEntity.getProdutoId());
+        itemPedido.setNomeProduto(jpaItemPedidoEntity.getNomeProduto());
+        itemPedido.setPrecoUnitario(jpaItemPedidoEntity.getPrecoUnitario());
+        itemPedido.setQuantidade(jpaItemPedidoEntity.getQuantidade());
 
         return itemPedido;
     }
