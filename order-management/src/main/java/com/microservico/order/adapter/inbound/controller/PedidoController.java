@@ -1,7 +1,7 @@
-package com.microservico.order.controller;
+package com.microservico.order.adapter.inbound.controller;
 
 import com.microservico.order.dto.response.PedidoDtoResponse;
-import com.microservico.order.service.PedidoService;
+import com.microservico.order.application.service.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
