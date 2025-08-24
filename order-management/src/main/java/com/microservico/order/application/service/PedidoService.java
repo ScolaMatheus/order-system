@@ -1,17 +1,17 @@
-package com.microservico.order.service;
+package com.microservico.order.application.service;
 
+import com.microservico.order.application.repositories.PedidoRepository;
+import com.microservico.order.application.useCases.PedidoUseCases;
 import com.microservico.order.dto.response.PedidoDtoResponse;
 import com.microservico.order.event.PedidoStatusEvent;
 import com.microservico.order.exceptions.RecursoNaoEncontradoException;
-import com.microservico.order.mapper.PedidoMapper;
+import com.microservico.order.util.mapper.PedidoMapper;
 import com.microservico.order.model.*;
-import com.microservico.order.repositories.PedidoRepository;
 import com.microservico.order.util.StatusPedido;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 @Slf4j
 @AllArgsConstructor
-public class PedidoService {
+public class PedidoService implements PedidoUseCases{
 
     private final PedidoRepository pedidoRepository;
 
@@ -62,11 +62,10 @@ public class PedidoService {
         log.info("Pedido {} alterado para status {} às {}",idPedido, statusPedido, dataHoraAtualizacao);
     }
 
-    public void excluirPedido(long idPedido) {
+    public void excluirPedido(Long idPedido) {
         Pedido pedido = pedidoRepository.findById(idPedido).orElseThrow(
-                () -> new RecursoNaoEncontradoException("Pedido não encontrado com esse id: " + idPedido)
-        );
-        pedidoRepository.delete(pedido);
+                () -> new RecursoNaoEncontradoException("Pedido não encontrado com esse id: " + idPedido));
+        pedidoRepository.delete(idPedido);
     }
 
 }
