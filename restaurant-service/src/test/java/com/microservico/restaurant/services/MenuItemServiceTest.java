@@ -1,13 +1,13 @@
 package com.microservico.restaurant.services;
 
+import com.microservico.restaurant.application.repository.MenuItemRepository;
+import com.microservico.restaurant.application.repository.RestaurantRepository;
+import com.microservico.restaurant.application.service.MenuItemService;
 import com.microservico.restaurant.dto.request.MenuItemRequestDTO;
 import com.microservico.restaurant.dto.response.MenuItemResponseDTO;
 import com.microservico.restaurant.exceptions.RecursoNaoEncontradoException;
 import com.microservico.restaurant.model.MenuItem;
 import com.microservico.restaurant.model.Restaurant;
-import com.microservico.restaurant.repositories.MenuItemRepository;
-import com.microservico.restaurant.repositories.RestaurantRepository;
-import com.microservico.restaurant.service.MenuItemService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

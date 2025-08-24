@@ -1,5 +1,10 @@
 package com.microservico.restaurant.services;
 
+import com.microservico.restaurant.adapter.outbound.publisher.PedidoEventPublisher;
+import com.microservico.restaurant.application.repository.MenuItemRepository;
+import com.microservico.restaurant.application.repository.PedidoRepository;
+import com.microservico.restaurant.application.repository.RestaurantRepository;
+import com.microservico.restaurant.application.service.PedidoService;
 import com.microservico.restaurant.dto.response.PedidoDtoResponse;
 import com.microservico.restaurant.event.PedidoCanceladoEvent;
 import com.microservico.restaurant.event.PedidoStatusEvent;
@@ -9,11 +14,6 @@ import com.microservico.restaurant.model.ItemPedido;
 import com.microservico.restaurant.model.MenuItem;
 import com.microservico.restaurant.model.Pedido;
 import com.microservico.restaurant.model.Restaurant;
-import com.microservico.restaurant.publisher.PedidoEventPublisher;
-import com.microservico.restaurant.repositories.MenuItemRepository;
-import com.microservico.restaurant.repositories.PedidoRepository;
-import com.microservico.restaurant.repositories.RestaurantRepository;
-import com.microservico.restaurant.service.PedidoService;
 import com.microservico.restaurant.util.StatusPedido;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
