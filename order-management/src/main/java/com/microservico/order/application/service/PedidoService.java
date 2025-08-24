@@ -1,6 +1,6 @@
 package com.microservico.order.application.service;
 
-import com.microservico.order.application.repositories.PedidoRepository;
+import com.microservico.order.application.repository.PedidoRepository;
 import com.microservico.order.application.useCases.PedidoUseCases;
 import com.microservico.order.dto.response.PedidoDtoResponse;
 import com.microservico.order.event.PedidoStatusEvent;
