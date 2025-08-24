@@ -1,7 +1,7 @@
-package com.microservico.order.consumer;
+package com.microservico.order.adapter.inbound.consumer;
 
 import com.microservico.order.event.PedidoStatusEvent;
-import com.microservico.order.service.PedidoService;
+import com.microservico.order.application.service.PedidoService;
 import com.microservico.order.util.RabbitUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

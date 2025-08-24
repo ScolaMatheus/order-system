@@ -1,8 +1,8 @@
-package com.microservico.order.consumer;
+package com.microservico.order.adapter.inbound.consumer;
 
-import com.microservico.order.event.PedidoCanceladoEvent;
+import com.microservico.order.event.PedidoEvent;
 import com.microservico.order.util.StatusPedido;
-import com.microservico.order.service.PedidoService;
+import com.microservico.order.application.service.PedidoService;
 import com.microservico.order.util.RabbitUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,19 +10,19 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import static com.microservico.order.util.RabbitConstants.PEDIDO_CANCELADO_QUEUE;
+import static com.microservico.order.util.RabbitConstants.PEDIDO_ENTREGUE_QUEUE;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PedidoCanceladoConsumer extends RabbitUtil {
+public class PedidoEntregueConsumer extends RabbitUtil {
 
     private final PedidoService pedidoService;
 
-    @RabbitListener(queues = PEDIDO_CANCELADO_QUEUE)
-    public void consumirPedidoCancelado(PedidoCanceladoEvent event, Message message) {
+    @RabbitListener(queues = PEDIDO_ENTREGUE_QUEUE)
+    public void consumirPedidoEntregue(PedidoEvent event, Message message) {
         int tentativas = getTentativas(message);
-        log.info("Pedido cancelado recebido: {}", event);
+        log.info("Pedido entregue recebido: {}",event);
 
         // Em caso de falha no consumo da mensagem ela será reprocessada 3 vezes, após isso ela será descartada
         if (tentativas >= 3) {
@@ -30,8 +30,7 @@ public class PedidoCanceladoConsumer extends RabbitUtil {
             return;
         }
 
-        pedidoService.atualizarPedido(event.getPedidoId(), StatusPedido.CANCELADO,event.getDataHoraAtualizacao());
-
+        pedidoService.atualizarPedido(event.getPedidoId(), StatusPedido.ENTREGUE, event.getDataHoraAtualizacao());
     }
 
 }

@@ -1,8 +1,8 @@
-package com.microservico.order.consumer;
+package com.microservico.order.adapter.inbound.consumer;
 
 import com.microservico.order.event.PedidoStatusEvent;
 import com.microservico.order.util.StatusPedido;
-import com.microservico.order.service.PedidoService;
+import com.microservico.order.application.service.PedidoService;
 import com.microservico.order.util.RabbitUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,19 +10,19 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import static com.microservico.order.util.RabbitConstants.PEDIDO_EM_ROTA_QUEUE;
+import static com.microservico.order.util.RabbitConstants.PEDIDO_PREPARANDO_QUEUE;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PedidoEmRotaConsumer extends RabbitUtil {
+public class PedidoPreparandoConsumer extends RabbitUtil {
 
     private final PedidoService pedidoService;
 
-    @RabbitListener(queues = PEDIDO_EM_ROTA_QUEUE)
-    public void consumirPedidoEmRota(PedidoStatusEvent event, Message message) {
+    @RabbitListener(queues = PEDIDO_PREPARANDO_QUEUE)
+    public void consumirPedidoEmPreparo(PedidoStatusEvent event, Message message) {
+        log.info("Pedido em preparo recebido: {}", event);
         int tentativas = getTentativas(message);
-        log.info("Pedido em rota de entrega recebido: {}", event);
 
         // Em caso de falha no consumo da mensagem ela será reprocessada 3 vezes, após isso ela será descartada
         if (tentativas >= 3) {
@@ -30,7 +30,6 @@ public class PedidoEmRotaConsumer extends RabbitUtil {
             return;
         }
 
-        pedidoService.atualizarPedido(event.getPedidoId(), StatusPedido.EM_ROTA, event.getDataHoraAtualizacao());
+        pedidoService.atualizarPedido(event.getPedidoId(), StatusPedido.PREPARANDO, event.getDataHoraAtualizacao());
     }
-
 }
