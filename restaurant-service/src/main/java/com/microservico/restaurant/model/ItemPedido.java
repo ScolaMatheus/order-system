@@ -1,40 +1,84 @@
 package com.microservico.restaurant.model;
 
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.math.BigDecimal;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(of = "id")
-@Entity
-@Table(name = "tb_item_pedido")
 public class ItemPedido {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pedido_id", nullable = false)
-    @ToString.Exclude
     private Pedido pedido;
 
-    @Column(nullable = false)
     private Long produtoId;
 
-    @Column(nullable = false)
     private String nomeProduto;
 
-    @Column(precision = 10, scale = 2, nullable = false)
     private BigDecimal precoUnitario;
 
-    @Column(nullable = false)
     private Integer quantidade;
+
+
+    public ItemPedido() {}
+
+    public ItemPedido(Long id, Pedido pedido, Long produtoId, String nomeProduto, BigDecimal precoUnitario, Integer quantidade) {
+        this.id = id;
+        this.pedido = pedido;
+        this.produtoId = produtoId;
+        this.nomeProduto = nomeProduto;
+        this.precoUnitario = precoUnitario;
+        this.quantidade = quantidade;
+    }
 
     public BigDecimal getValorTotal() {
         if (precoUnitario == null || quantidade == null) return BigDecimal.ZERO;
         return precoUnitario.multiply(BigDecimal.valueOf(quantidade));
-    }}
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Pedido getPedido() {
+        return pedido;
+    }
+
+    public Long getProdutoId() {
+        return produtoId;
+    }
+
+    public String getNomeProduto() {
+        return nomeProduto;
+    }
+
+    public BigDecimal getPrecoUnitario() {
+        return precoUnitario;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setPedido(Pedido pedido) {
+        this.pedido = pedido;
+    }
+
+    public void setProdutoId(Long produtoId) {
+        this.produtoId = produtoId;
+    }
+
+    public void setNomeProduto(String nomeProduto) {
+        this.nomeProduto = nomeProduto;
+    }
+
+    public void setPrecoUnitario(BigDecimal precoUnitario) {
+        this.precoUnitario = precoUnitario;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
+    }
+
+}

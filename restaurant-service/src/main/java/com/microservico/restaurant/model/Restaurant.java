@@ -1,34 +1,67 @@
 package com.microservico.restaurant.model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.List;
 
-@Entity
-@Table(name = "tb_restaurante")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Restaurant {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private Long id;
 
-    @Column(nullable = false)
     private String nome;
 
-    @Column(nullable = false)
     private String endereco;
 
-    @Column(nullable = false)
     private Boolean ativo;
 
-    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MenuItem> cardapio;
 
+    public Restaurant() {
+    }
+
+    public Restaurant(Long id, String nome, String endereco, Boolean ativo, List<MenuItem> cardapio) {
+        this.id = id;
+        this.nome = nome;
+        this.endereco = endereco;
+        this.ativo = ativo;
+        this.cardapio = cardapio;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public Boolean getAtivo() {
+        return ativo;
+    }
+
+    public void setAtivo(Boolean ativo) {
+        this.ativo = ativo;
+    }
+
+    public List<MenuItem> getCardapio() {
+        return cardapio;
+    }
+
+    public void setCardapio(List<MenuItem> cardapio) {
+        this.cardapio = cardapio;
+    }
 }
