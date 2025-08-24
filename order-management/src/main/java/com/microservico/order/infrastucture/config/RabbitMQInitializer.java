@@ -1,4 +1,4 @@
-package com.microservico.order.config;
+package com.microservico.order.infrastucture.config;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;

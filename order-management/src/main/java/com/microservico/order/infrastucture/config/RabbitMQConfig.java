@@ -1,4 +1,4 @@
-package com.microservico.order.config;
+package com.microservico.order.infrastucture.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
