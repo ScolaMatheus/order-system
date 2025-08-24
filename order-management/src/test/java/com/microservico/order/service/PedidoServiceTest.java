@@ -1,12 +1,13 @@
 package com.microservico.order.service;
 
+import com.microservico.order.application.repositories.PedidoRepository;
+import com.microservico.order.application.service.PedidoService;
 import com.microservico.order.dto.response.PedidoDtoResponse;
 import com.microservico.order.event.PedidoStatusEvent;
 import com.microservico.order.exceptions.RecursoNaoEncontradoException;
 import com.microservico.order.model.ItemPedido;
 import com.microservico.order.model.Pedido;
 import com.microservico.order.util.StatusPedido;
-import com.microservico.order.repositories.PedidoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -159,7 +160,7 @@ public class PedidoServiceTest {
 
         pedidoService.excluirPedido(pedidoId);
 
-        verify(pedidoRepository).delete(pedido);
+        verify(pedidoRepository).delete(pedidoId);
     }
 
     @Test
