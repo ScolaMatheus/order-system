@@ -1,7 +1,7 @@
 package com.microservico.order.adapter.outbound.repositories;
 
 import com.microservico.order.adapter.outbound.entities.JpaPedidoEntity;
-import com.microservico.order.application.repositories.PedidoRepository;
+import com.microservico.order.application.repository.PedidoRepository;
 import com.microservico.order.model.Pedido;
 import com.microservico.order.util.mapper.PedidoMapper;
 import lombok.RequiredArgsConstructor;
