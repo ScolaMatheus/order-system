@@ -1,6 +1,7 @@
 package com.microservico.customer.event;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.microservico.customer.util.StatusPedido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,5 +17,6 @@ public class PedidoEvent {
     private Long restauranteId;
     private Long clienteId;
     private StatusPedido statusPedido;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataHoraAtualizacao;
 }
