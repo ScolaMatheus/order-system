@@ -1,9 +1,9 @@
-# 🧾 Order System - Microserviços com Spring Boot, RabbitMQ e PostgreSQL
+# 🧾 Order System - Microserviços com Spring Boot, Kafka e PostgreSQL
 
 Este projeto é um sistema distribuído de **gestão de pedidos**, desenvolvido com foco em arquitetura de **microserviços**, utilizando:
 
 - **Spring Boot**
-- **RabbitMQ** para comunicação assíncrona
+- **kafka** para comunicação assíncrona
 - **PostgreSQL** para persistência
 - **Swagger** para documentação das APIs
 - **Docker Compose** para orquestração
@@ -13,19 +13,19 @@ Este projeto é um sistema distribuído de **gestão de pedidos**, desenvolvido 
 
 1. O cliente realiza um pedido via `customer-service`:
     - `POST /api/pedidos`
-2. O serviço publica o evento `pedido.status.criado`
+2. O serviço publica o evento `pedido-criado`
 3. Esse evento é consumido por:
     - `order-management`: persiste o pedido
     - `restaurant-service`: valida os itens e responde com:
-        - `pedido.status.preparando` (sucesso)
-        - `pedido.status.cancelado` (falha)
+        - `pedido-preparando` (sucesso)
+        - `pedido-cancelado` (falha)
 4. Todos os serviços consomem os eventos e atualizam seus estados
 5. Quando o restaurante finaliza a preparação:
     - Chama `POST /pedidos/{id}/em-rota`
     - Publica o evento `pedido.status.em-rota`
 6. Quando o pedido é entregue:
     - `customer-service` chama `PATCH /clientes/pedidos/{id}/entrega`
-    - Evento `pedido.status.entregue` é disparado
+    - Evento `pedido-entregue` é disparado
 
 ---
 
@@ -53,7 +53,7 @@ Este projeto é um sistema distribuído de **gestão de pedidos**, desenvolvido 
 - Java 17
 - Spring Boot
 - Spring Data JPA
-- RabbitMQ
+- Kafka
 - PostgreSQL
 - Swagger/OpenAPI
 - Docker e Docker Compose
@@ -89,13 +89,13 @@ Os serviços serão inicializados automaticamente com as imagens públicas do Do
 
 ## 🔁 Comunicação via eventos
 
-| Evento                        | Emissor             | Consumidores                         |
-|------------------------------|---------------------|--------------------------------------|
-| `pedido.status.criado`       | customer-service    | order-management, restaurant-service |
-| `pedido.status.preparando`   | restaurant-service  | customer-service, order-management   |
-| `pedido.status.cancelado`    | restaurant-service  | customer-service, order-management   |
-| `pedido.status.em-rota`      | restaurant-service  | customer-service, order-management   |
-| `pedido.status.entregue`     | customer-service    | restaurant-service, order-management |
+| Evento              | Emissor             | Consumidores                         |
+|---------------------|---------------------|--------------------------------------|
+| `pedido-criado`     | customer-service    | order-management, restaurant-service |
+| `pedido-preparando` | restaurant-service  | customer-service, order-management   |
+| `pedido-cancelado`  | restaurant-service  | customer-service, order-management   |
+| `pedido-em-rota`    | restaurant-service  | customer-service, order-management   |
+| `pedido-entregue`   | customer-service    | restaurant-service, order-management |
 
 ---
 
