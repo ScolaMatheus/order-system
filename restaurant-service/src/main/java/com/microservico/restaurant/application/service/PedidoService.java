@@ -2,8 +2,6 @@ package com.microservico.restaurant.application.service;
 
 import com.microservico.restaurant.application.useCases.PedidoUseCases;
 import com.microservico.restaurant.dto.response.PedidoDtoResponse;
-import com.microservico.restaurant.event.PedidoCanceladoEvent;
-import com.microservico.restaurant.event.PedidoStatusEvent;
 import com.microservico.restaurant.exceptions.RecursoNaoEncontradoException;
 import com.microservico.restaurant.exceptions.StatusIncorretoException;
 import com.microservico.restaurant.util.mapper.PedidoMapper;
@@ -14,10 +12,12 @@ import com.microservico.restaurant.adapter.outbound.publisher.PedidoEventPublish
 import com.microservico.restaurant.application.repository.MenuItemRepository;
 import com.microservico.restaurant.application.repository.PedidoRepository;
 import com.microservico.restaurant.application.repository.RestaurantRepository;
-import com.microservico.restaurant.util.StatusPedido;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lib.orderEvents.event.PedidoCanceladoEvent;
+import org.lib.orderEvents.event.PedidoStatusEvent;
+import org.lib.orderEvents.event.StatusPedido;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

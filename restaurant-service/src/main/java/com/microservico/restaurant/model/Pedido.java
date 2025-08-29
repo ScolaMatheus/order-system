@@ -1,6 +1,6 @@
 package com.microservico.restaurant.model;
 
-import com.microservico.restaurant.util.StatusPedido;
+import org.lib.orderEvents.event.StatusPedido;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

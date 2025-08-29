@@ -1,7 +1,7 @@
 package com.microservico.restaurant.dto.response;
 
 
-import com.microservico.restaurant.util.StatusPedido;
+import org.lib.orderEvents.event.StatusPedido;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

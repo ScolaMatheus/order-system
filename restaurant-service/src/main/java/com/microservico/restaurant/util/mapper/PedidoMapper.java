@@ -3,11 +3,11 @@ package com.microservico.restaurant.util.mapper;
 import com.microservico.restaurant.adapter.outbound.entities.JpaItemPedidoEntity;
 import com.microservico.restaurant.adapter.outbound.entities.JpaPedidoEntity;
 import com.microservico.restaurant.dto.response.PedidoDtoResponse;
-import com.microservico.restaurant.event.PedidoStatusEvent;
 import com.microservico.restaurant.exceptions.RecursoNaoEncontradoException;
 import com.microservico.restaurant.model.ItemPedido;
 import com.microservico.restaurant.model.Pedido;
 import lombok.extern.slf4j.Slf4j;
+import org.lib.orderEvents.event.PedidoStatusEvent;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -57,7 +57,14 @@ public class PedidoMapper {
         pedidoEvent.setClienteId(pedido.getClienteId());
         pedidoEvent.setStatusPedido(pedido.getStatusPedido());
         pedidoEvent.setDataHoraAtualizacao(pedido.getDataAtualizacao());
-        pedidoEvent.setItens(pedido.getItens().stream().map(PedidoStatusEvent.ItemPedidoEvent::new).toList());
+        pedidoEvent.setItens(pedido.getItens().stream().map(itemPedido ->
+                    new PedidoStatusEvent.ItemPedidoEvent(
+                            itemPedido.getProdutoId(),
+                            itemPedido.getNomeProduto(),
+                            itemPedido.getQuantidade(),
+                            itemPedido.getPrecoUnitario()
+                    )
+                ).toList());
         pedidoEvent.setValorTotal(pedido.getValorTotal());
 
         return pedidoEvent;

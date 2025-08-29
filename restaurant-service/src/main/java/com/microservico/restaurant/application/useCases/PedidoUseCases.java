@@ -1,8 +1,8 @@
 package com.microservico.restaurant.application.useCases;
 
 import com.microservico.restaurant.dto.response.PedidoDtoResponse;
-import com.microservico.restaurant.event.PedidoStatusEvent;
-import com.microservico.restaurant.util.StatusPedido;
+import org.lib.orderEvents.event.PedidoStatusEvent;
+import org.lib.orderEvents.event.StatusPedido;
 
 import java.time.LocalDateTime;
 import java.util.List;

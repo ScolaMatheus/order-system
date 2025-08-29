@@ -2,9 +2,9 @@ package com.microservico.customer.application.useCases;
 
 import com.microservico.customer.dto.request.PedidoDtoRequest;
 import com.microservico.customer.dto.response.PedidoDtoResponse;
-import com.microservico.customer.event.PedidoCanceladoEvent;
-import com.microservico.customer.event.PedidoStatusEvent;
-import com.microservico.customer.util.StatusPedido;
+import org.lib.orderEvents.event.StatusPedido;
+import org.lib.orderEvents.event.PedidoCanceladoEvent;
+import org.lib.orderEvents.event.PedidoStatusEvent;
 
 import java.time.LocalDateTime;
 

@@ -1,6 +1,5 @@
 package com.microservico.restaurant.adapter.outbound.entities;
 
-import com.microservico.restaurant.util.StatusPedido;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -8,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.lib.orderEvents.event.StatusPedido;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -4,11 +4,11 @@ import com.microservico.customer.adapter.outbound.entities.JpaItemPedidoEntity;
 import com.microservico.customer.adapter.outbound.entities.JpaPedidoEntity;
 import com.microservico.customer.dto.request.PedidoDtoRequest;
 import com.microservico.customer.dto.response.PedidoDtoResponse;
-import com.microservico.customer.event.PedidoStatusEvent;
 import com.microservico.customer.model.ItemPedido;
 import com.microservico.customer.model.Pedido;
-import com.microservico.customer.util.StatusPedido;
+import org.lib.orderEvents.event.StatusPedido;
 import lombok.extern.slf4j.Slf4j;
+import org.lib.orderEvents.event.PedidoStatusEvent;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,7 +25,14 @@ public class PedidoMapper {
         pedidoEvent.setClienteId(pedido.getClienteId());
         pedidoEvent.setStatusPedido(pedido.getStatusPedido());
         pedidoEvent.setDataHoraAtualizacao(pedido.getDataAtualizacao());
-        pedidoEvent.setItens(pedido.getItens().stream().map(PedidoStatusEvent.ItemPedidoEvent::new).toList());
+        pedidoEvent.setItens(pedido.getItens().stream().map(itemPedido ->
+                new PedidoStatusEvent.ItemPedidoEvent(
+                        itemPedido.getProdutoId(),
+                        itemPedido.getNomeProduto(),
+                        itemPedido.getQuantidade(),
+                        itemPedido.getPrecoUnitario()
+                )
+                ).toList());
         pedidoEvent.setValorTotal(pedido.getValorTotal());
 
         return pedidoEvent;
@@ -122,7 +129,7 @@ public class PedidoMapper {
         jpaItem.setNomeProduto(item.getNomeProduto());
         jpaItem.setPrecoUnitario(item.getPrecoUnitario());
         jpaItem.setQuantidade(item.getQuantidade());
-        jpaItem.setPedido(jpaPedido); // <<-- AQUI ESTÁ A CORREÇÃO CRÍTICA
+        jpaItem.setPedido(jpaPedido);
 
         return jpaItem;
     }

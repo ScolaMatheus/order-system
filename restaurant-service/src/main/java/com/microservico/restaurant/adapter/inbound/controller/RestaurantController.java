@@ -3,7 +3,6 @@ package com.microservico.restaurant.adapter.inbound.controller;
 import com.microservico.restaurant.dto.request.RestaurantRequestDTO;
 import com.microservico.restaurant.dto.response.PedidoDtoResponse;
 import com.microservico.restaurant.dto.response.RestaurantResponseDTO;
-import com.microservico.restaurant.event.PedidoStatusEvent;
 import com.microservico.restaurant.application.service.PedidoService;
 import com.microservico.restaurant.application.service.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.lib.orderEvents.event.PedidoStatusEvent;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
