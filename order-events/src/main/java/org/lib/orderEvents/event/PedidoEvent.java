@@ -1,8 +1,7 @@
-package com.microservico.customer.event;
+package org.lib.orderEvents.event;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.microservico.customer.util.StatusPedido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

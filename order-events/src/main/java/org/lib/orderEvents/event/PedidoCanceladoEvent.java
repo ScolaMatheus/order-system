@@ -1,6 +1,5 @@
-package com.microservico.customer.event;
+package org.lib.orderEvents.event;
 
-import com.microservico.customer.util.StatusPedido;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class PedidoCanceladoEvent extends PedidoEvent{
+public class PedidoCanceladoEvent extends PedidoEvent {
     private String motivoCancelamento;
     private String origemCancelamento;
 

@@ -1,6 +1,5 @@
-package com.microservico.customer.event;
+package org.lib.orderEvents.event;
 
-import com.microservico.customer.model.ItemPedido;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -23,12 +22,5 @@ public class PedidoStatusEvent extends PedidoEvent {
         private String nomeProduto;
         private Integer quantidade;
         private BigDecimal precoUnitario;
-
-        public ItemPedidoEvent(ItemPedido itemPedido) {
-            this.produtoId = itemPedido.getProdutoId();
-            this.nomeProduto = itemPedido.getNomeProduto();
-            this.quantidade = itemPedido.getQuantidade();
-            this.precoUnitario = itemPedido.getPrecoUnitario();
-        }
     }
 }
