@@ -1,36 +1,30 @@
 package com.microservico.restaurant.adapter.outbound.publisher;
 
-import com.microservico.restaurant.event.PedidoCanceladoEvent;
-import com.microservico.restaurant.event.PedidoStatusEvent;
-import com.microservico.restaurant.util.StatusPedido;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.lib.orderEvents.event.PedidoCanceladoEvent;
+import org.lib.orderEvents.event.PedidoStatusEvent;
+import org.lib.orderEvents.event.StatusPedido;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
-
-import static com.microservico.restaurant.util.RabbitConstants.*;
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
 public class PedidoEventPublisher {
 
-    private final RabbitTemplate rabbitTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void publicarPedidoCancelado(PedidoCanceladoEvent event) {
-        rabbitTemplate.convertAndSend(
-                PEDIDO_EXCHANGE,
-                PEDIDO_CANCELADO_ROUTING_KEY,
-                event
-        );
+        kafkaTemplate.send("pedido-cancelado", event);
         log.info("PedidoCanceladoEvent publicado : {}", event);
     }
 
     public void publicarStatusPedido(PedidoStatusEvent event) {
-        String routingKey = event.getStatusPedido().equals(StatusPedido.PREPARANDO)
-                ? PEDIDO_PREPARANDO_ROUTING_KEY : PEDIDO_EM_ROTA_ROUTING_KEY;
+        String topicName = event.getStatusPedido().equals(StatusPedido.PREPARANDO)
+                ? "pedido-preparando" : "pedido-em-rota";
 
-        rabbitTemplate.convertAndSend(PEDIDO_EXCHANGE, routingKey, event);
+        kafkaTemplate.send(topicName, event);
         log.info("Pedido {} publicado com status {}", event.getPedidoId(), event.getStatusPedido().name());
     }
 }
