@@ -1,37 +1,26 @@
 package com.microservico.restaurant.adapter.inbound.consumer;
 
-import com.microservico.restaurant.event.PedidoCanceladoEvent;
 import com.microservico.restaurant.application.service.PedidoService;
-import com.microservico.restaurant.util.RabbitUtil;
-import com.microservico.restaurant.util.StatusPedido;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.lib.orderEvents.event.PedidoCanceladoEvent;
+import org.lib.orderEvents.event.StatusPedido;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import static com.microservico.restaurant.util.OrigemCancelamento.RESTAURANT_SERVICE;
-import static com.microservico.restaurant.util.RabbitConstants.PEDIDO_CANCELADO_QUEUE;
-
 
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class PedidoCanceladoConsumer extends RabbitUtil {
+public class PedidoCanceladoConsumer {
 
     private final PedidoService pedidoService;
 
-    @RabbitListener(queues = PEDIDO_CANCELADO_QUEUE)
-    public void consumirPedidoCancelado(PedidoCanceladoEvent event, Message message) {
+    @KafkaListener(topics = "pedido-cancelado", groupId = "restaurant-service")
+    public void consumirPedidoCancelado(PedidoCanceladoEvent event) {
 
         if (event.getOrigemCancelamento().equals(RESTAURANT_SERVICE.name())) {
-            return;
-        }
-
-        int tentativas = getTentativas(message);
-
-        if (tentativas >= 3) {
-            log.warn("Mensagem ignorada após {} tentativas: {}", tentativas, event);
             return;
         }
 
@@ -40,5 +29,4 @@ public class PedidoCanceladoConsumer extends RabbitUtil {
         pedidoService.atualizarPedido(event.getPedidoId(), StatusPedido.CANCELADO,event.getDataHoraAtualizacao());
 
     }
-
 }
