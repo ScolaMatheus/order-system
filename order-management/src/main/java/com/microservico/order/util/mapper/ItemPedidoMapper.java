@@ -2,9 +2,9 @@ package com.microservico.order.util.mapper;
 
 import com.microservico.order.adapter.outbound.entities.JpaItemPedidoEntity;
 import com.microservico.order.dto.response.ItemPedidoDtoResponse;
-import com.microservico.order.event.PedidoStatusEvent;
 import com.microservico.order.model.ItemPedido;
 import com.microservico.order.model.Pedido;
+import org.lib.orderEvents.event.PedidoStatusEvent;
 
 public class ItemPedidoMapper {
 

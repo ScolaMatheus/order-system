@@ -3,14 +3,14 @@ package com.microservico.order.application.service;
 import com.microservico.order.application.repository.PedidoRepository;
 import com.microservico.order.application.useCases.PedidoUseCases;
 import com.microservico.order.dto.response.PedidoDtoResponse;
-import com.microservico.order.event.PedidoStatusEvent;
 import com.microservico.order.exceptions.RecursoNaoEncontradoException;
 import com.microservico.order.util.mapper.PedidoMapper;
 import com.microservico.order.model.*;
-import com.microservico.order.util.StatusPedido;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lib.orderEvents.event.PedidoStatusEvent;
+import org.lib.orderEvents.event.StatusPedido;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

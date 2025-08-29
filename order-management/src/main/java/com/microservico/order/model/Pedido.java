@@ -1,6 +1,6 @@
 package com.microservico.order.model;
 
-import com.microservico.order.util.StatusPedido;
+import org.lib.orderEvents.event.StatusPedido;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

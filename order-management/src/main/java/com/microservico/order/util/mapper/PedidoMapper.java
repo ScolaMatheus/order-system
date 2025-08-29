@@ -3,8 +3,8 @@ package com.microservico.order.util.mapper;
 import com.microservico.order.adapter.outbound.entities.JpaItemPedidoEntity;
 import com.microservico.order.adapter.outbound.entities.JpaPedidoEntity;
 import com.microservico.order.dto.response.PedidoDtoResponse;
-import com.microservico.order.event.PedidoStatusEvent;
 import com.microservico.order.model.*;
+import org.lib.orderEvents.event.PedidoStatusEvent;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;

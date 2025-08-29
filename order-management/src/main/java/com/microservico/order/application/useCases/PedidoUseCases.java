@@ -1,8 +1,8 @@
 package com.microservico.order.application.useCases;
 
 import com.microservico.order.dto.response.PedidoDtoResponse;
-import com.microservico.order.event.PedidoStatusEvent;
-import com.microservico.order.util.StatusPedido;
+import org.lib.orderEvents.event.PedidoStatusEvent;
+import org.lib.orderEvents.event.StatusPedido;
 
 import java.time.LocalDateTime;
 import java.util.List;
