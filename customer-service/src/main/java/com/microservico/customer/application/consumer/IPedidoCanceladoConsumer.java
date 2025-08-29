@@ -1,6 +1,7 @@
 package com.microservico.customer.application.consumer;
 
-import com.microservico.customer.event.PedidoCanceladoEvent;
+
+import org.lib.orderEvents.event.PedidoCanceladoEvent;
 
 public interface IPedidoCanceladoConsumer {
 

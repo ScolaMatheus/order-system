@@ -1,12 +1,9 @@
 package com.microservico.customer.adapter.inbound.controller;
 
-
 import com.microservico.customer.dto.request.ClienteDtoRequest;
 import com.microservico.customer.dto.request.PedidoDtoRequest;
 import com.microservico.customer.dto.response.ClienteDtoResponse;
 import com.microservico.customer.dto.response.PedidoDtoResponse;
-import com.microservico.customer.event.PedidoCanceladoEvent;
-import com.microservico.customer.event.PedidoStatusEvent;
 import com.microservico.customer.application.services.ClienteService;
 import com.microservico.customer.application.services.PedidoService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.lib.orderEvents.event.PedidoCanceladoEvent;
+import org.lib.orderEvents.event.PedidoStatusEvent;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -1,7 +1,6 @@
 package com.microservico.customer.adapter.outbound.entities;
 
-import com.microservico.customer.model.Pedido;
-import com.microservico.customer.util.StatusPedido;
+import org.lib.orderEvents.event.StatusPedido;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

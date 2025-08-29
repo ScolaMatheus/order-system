@@ -1,6 +1,6 @@
 package com.microservico.customer.dto.response;
 
-import com.microservico.customer.util.StatusPedido;
+import org.lib.orderEvents.event.StatusPedido;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
