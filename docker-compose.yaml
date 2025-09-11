@@ -58,25 +58,36 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
+      
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
     ports:
-      - "5672:5672"
-      - "15672:15672"
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+      - "2181:2181"
     environment:
-      RABBITMQ_DEFAULT_USER: orderSystemUser
-      RABBITMQ_DEFAULT_PASS: orderSystem2925
-      TZ: America/Sao_Paulo
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
     networks:
       - springnet
 
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    networks:
+      - springnet
 
   order-management:
-    image: matheusscola/ordersystem-order-management:latest
+    image: matheusscola/ordersystem-order-management:test_kafka
     container_name: order-management
     depends_on:
       postgres-order:
@@ -97,7 +108,7 @@ services:
       - springnet
 
   customer-service:
-    image: matheusscola/ordersystem-customer-service:latest
+    image: matheusscola/ordersystem-customer-service:test_kafka
     container_name: customer-service
     depends_on:
       postgres-customer:
@@ -117,7 +128,7 @@ services:
       - springnet
 
   restaurant-service:
-    image: matheusscola/ordersystem-restaurant-service:latest
+    image: matheusscola/ordersystem-restaurant-service:test_kafka
     container_name: restaurant-service
     depends_on:
       postgres-restaurant:
@@ -140,7 +151,6 @@ volumes:
   pgdata_order:
   pgdata_customer:
   pgdata_restaurant:
-  rabbitmq_data:
 
 networks:
   springnet:
